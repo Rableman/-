@@ -1,3 +1,3 @@
-import tcp
+import commu
 
-print(tcp.communication("tcp", "127.0.0.1", 50007).client("hello"))
+print(commu.communication("tcp", "127.0.0.1", 50007).client("hello"))
