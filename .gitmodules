@@ -1,0 +1,3 @@
+[submodule "stepper-raspi"]
+	path = stepper-raspi
+	url = ssh://git@gitlab.jkserver.tk:59450/nakayama/stepper-raspi.git
