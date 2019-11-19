@@ -1,20 +1,26 @@
 #coding: utf-8
 import queue
 import sys
+import random
 import numpy as np
 
 class route_data:
-    def __init__(self):
-        self.H = 11 #N*Mのグリッド
-        self.W = 11
+    def __init__(self,h,w,start,goal):
+        self.H = h #N*Mのグリッド
+        self.W = w
         self.field = list() #グリッド上の情報を格納
         self.Route_Field = np.zeros((self.H,self.W),dtype=int) #最終経路の表示に使用
         self.CL = np.zeros((self.H,self.W), dtype=int) #CLは2次元配列で用意
         self.OL = queue.Queue() #キューはモジュールを用いる
         self.Cost = np.zeros((self.H,self.W), dtype=int) + 999 #経路を辿るためのコスト
-        self.Start = (1,1) #Start位置とGoal位置はあらかじめタプル型で用意
-        self.Goal = (9,9)
+        self.Start = start #Start位置とGoal位置はあらかじめタプル型で用意
+        self.Goal = goal
         self.route = [self.Goal]
+
+    def random_goal(self):
+        x = random.randint(1,5)
+        y = random.randint(1,5)
+        return (x,y)
 
     def next(self,x):
         #上に進めるか判定
@@ -60,6 +66,7 @@ class route_data:
                 break
             Route.next(x)
         if(x!=self.Goal):
+            print(self.Goal)
             print("Fault\n")
             sys.exit()
 
@@ -117,7 +124,11 @@ class route_data:
         for i in self.Route_Field:
             print(*i)
 
-Route = route_data()
+x = random.randint(1,5)
+y = random.randint(1,5)
+goal = (x,y)
+#別ファイルでrandom_goalをクラス化すること
+Route = route_data(7,7,(1,1),goal)
 
 Route.load_map()
 Route.format_OL()
