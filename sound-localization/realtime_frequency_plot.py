@@ -13,9 +13,9 @@ import struct
 class PlotWindow:
     def __init__(self):
         #マイクインプット設定
-        self.CHUNK=1024            #1度に読み取る音声のデータ幅
+        self.CHUNK=512           #1度に読み取る音声のデータ幅
         self.RATE=44100             #サンプリング周波数
-        self.update_seconds=50      #更新時間[ms]
+        self.update_seconds=10      #更新時間[ms]
         self.audio=pyaudio.PyAudio()
         self.stream=self.audio.open(format=pyaudio.paInt16,
                                     channels=1,
@@ -40,10 +40,13 @@ class PlotWindow:
 
     def update(self):
         self.data=np.append(self.data,self.AudioInput())
-        if len(self.data)/1024 > 10:
-            self.data=self.data[1024:]
+        if len(self.data)/self.CHUNK > 10:
+            self.data=self.data[self.CHUNK:]
         self.fft_data=self.FFT_AMP(self.data)
         self.axis=np.fft.fftfreq(len(self.data), d=1.0/self.RATE)
+        for i in range (len(self.fft_data)):
+            if self.axis[i] < 700:
+                self.fft_data[i] = 0
         self.plt.plot(x=self.axis, y=self.fft_data, clear=True, pen="y")  #symbol="o", symbolPen="y", symbolBrush="b")
 
     def AudioInput(self):
@@ -57,7 +60,7 @@ class PlotWindow:
         data=np.hamming(len(data))*data
         data=np.fft.fft(data)
         data=np.abs(data)
-        return data
+        return data*10
 
 if __name__=="__main__":
     plotwin=PlotWindow()
