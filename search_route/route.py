@@ -2,6 +2,7 @@
 import queue
 import sys
 import random
+import random_setup
 import numpy as np
 
 class route_data:
@@ -16,11 +17,6 @@ class route_data:
         self.Start = start #Start位置とGoal位置はあらかじめタプル型で用意
         self.Goal = goal
         self.route = [self.Goal]
-
-    def random_goal(self):
-        x = random.randint(1,5)
-        y = random.randint(1,5)
-        return (x,y)
 
     def next(self,x):
         #上に進めるか判定
@@ -41,9 +37,9 @@ class route_data:
             self.Cost[x[1]][x[0]-1] = self.Cost[x[1]][x[0]] + 1
         return
 
-    def load_map(self):
+    def load_map(self,file_name):
         #迷路の情報をfieldにリストで格納
-        f = open('field.txt','r')
+        f = open(file_name,'r')
         for row in f:
             row_re = row.replace('\n', '')
             row_new = list()
@@ -52,13 +48,24 @@ class route_data:
             self.field.append(list(row_new))
         f.close()
 
+    def write_map(self,file_name):
+        device = random_setup.rand_map(1,5)
+        self.field[device[0]][device[1]] = 1
+
+    def  update_map(self,file_name):
+        self.field = list()
+        Route.load_map(file_name)
+        for i in range(8):
+            Route.write_map(file_name)
+
     def format_OL(self):
         self.OL.put(self.Start) #OLに初期状態を追加
         self.Cost[self.Start[1]][self.Start[0]] = 0
 
-    def search_route(self):
+    def search_route(self,file_name):
         #while文で探索する
         while not self.OL.empty():
+            Route.update_map(file_name)
             x = self.OL.get()
             self.CL[x[1]][x[0]]=1
             #Goalについた時の判定
@@ -113,6 +120,7 @@ class route_data:
             except: pass
         #ルートを逆順にする
         self.route = self.route[::-1]
+        print(self.route)
 
     def update_route(self):
         #通る経路を1で埋める
@@ -124,15 +132,12 @@ class route_data:
         for i in self.Route_Field:
             print(*i)
 
-x = random.randint(1,5)
-y = random.randint(1,5)
-goal = (x,y)
-#別ファイルでrandom_goalをクラス化すること
-Route = route_data(7,7,(1,1),goal)
+#Route = route_data(7,7,(1,1),random_setup.rand_map(1,5))
+Route = route_data(7,7,(1,1),(5,5))
 
-Route.load_map()
+Route.load_map('field.txt')
 Route.format_OL()
-Route.search_route()
+Route.search_route('field.txt')
 Route.reverse_route()
 Route.update_route()
 Route.show_route()
