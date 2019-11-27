@@ -13,10 +13,14 @@ import struct
 
 def filt(data, s_freq, fp, fs, gp, gs, ftype):
     nyq = s_freq / 2                           #ナイキスト周波数
-    Wp = fp / nyq
-    Ws = fs / nyq
+    if type(fp) == "list":
+        Wp = [x/nyq for x in fp]
+        Ws = [x/nyq for x in fs]
+    else:  
+        Wp = fp/nyq
+        Ws = fs/nyq
     N, Wn = signal.buttord(Wp, Ws, gp, gs)
-    b, a = signal.butter(N, Wn, "low")
+    b, a = signal.butter(N, Wn, ftype)
     data = signal.filtfilt(b, a, data)
     return data
 
@@ -64,8 +68,7 @@ class PlotWindow:
         #バイナリ → 数値(int16)に変換
         #32768.0=2^16で割ってるのは正規化(絶対値を1以下にすること)
         ret=np.frombuffer(ret, dtype="int16")/32768.0
-        ret=filt(ret, self.RATE, 2000, 1300, 3, 40, "high")
-        ret=filt(ret, self.RATE, 3000, 2000, 3, 40, "low")        
+        ret=filt(ret, self.RATE, 16000, 17000, 3, 40, "low")
         return ret
 
     def FFT_AMP(self, data):
