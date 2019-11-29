@@ -3,10 +3,11 @@ import queue
 import sys
 import random
 import random_setup
+#import goal_setup
 import numpy as np
 
 class route_data:
-    def __init__(self,h,w,start,goal):
+    def __init__(self,h,w,start):
         self.H = h #N*Mのグリッド
         self.W = w
         self.field = list() #グリッド上の情報を格納
@@ -15,8 +16,8 @@ class route_data:
         self.OL = queue.Queue() #キューはモジュールを用いる
         self.Cost = np.zeros((self.H,self.W), dtype=int) + 999 #経路を辿るためのコスト
         self.Start = start #Start位置とGoal位置はあらかじめタプル型で用意
-        self.Goal = goal
-        self.route = [self.Goal]
+        #self.Goal
+        #self.route = [self.Goal]
 
     def next(self,x):
         #上に進めるか判定
@@ -37,7 +38,7 @@ class route_data:
             self.Cost[x[1]][x[0]-1] = self.Cost[x[1]][x[0]] + 1
         return
 
-    def load_map(self,file_name):
+    def load_map(self,file_name,var_name):
         #迷路の情報をfieldにリストで格納
         f = open(file_name,'r')
         for row in f:
@@ -45,27 +46,30 @@ class route_data:
             row_new = list()
             for i in row_re: #文字から数値に変換
                 row_new.append(int(i))
-            self.field.append(list(row_new))
+            #self.var_name.append(list(row_new))
+            var_name.append(list(row_new))
         f.close()
 
+    '''
     def write_map(self,file_name):
-        device = random_setup.rand_map(1,5)
+        device = random_setup.rand_map(1,5) #今度ランダムじゃないものに置き換える？
         self.field[device[0]][device[1]] = 1
 
-    def  update_map(self,file_name,object_name):
+    def  update_map(self,file_name,object_name,var_name):
         self.field = list()
-        object_name.load_map(file_name)
+        object_name.load_map(file_name,var_name)
         for i in range(8):
             object_name.write_map(file_name)
+    '''
 
     def format_OL(self):
         self.OL.put(self.Start) #OLに初期状態を追加
         self.Cost[self.Start[1]][self.Start[0]] = 0
 
-    def search_route(self,file_name,object_name):
+    def search_route(self,file_name,object_name,var_name):
         #while文で探索する
         while not self.OL.empty():
-            #object_name.update_map(file_name,object_name)
+            #object_name.update_map(file_name,object_name,var_name)
             x = self.OL.get()
             self.CL[x[1]][x[0]]=1
             #Goalについた時の判定
@@ -131,18 +135,19 @@ class route_data:
         #探索したルートを表示
         for i in self.Route_Field:
             print(*i)
-    
-    def show_now_map(self,file_name,object_name):
-        object_name.load_map(file_name)
-
-
-
-#Route = route_data(7,7,(1,1),random_setup.rand_map(1,5))
-Route = route_data(7,7,(1,1),(5,5))
-
-Route.load_map('field.txt')
-Route.format_OL()
-Route.search_route('field.txt',Route)
-Route.reverse_route()
-Route.update_route()
-Route.show_route()
+    '''
+    def show_now_map(self,file_name,object_name,var_name):
+        object_name.load_map(file_name,var_name)
+    '''
+'''
+Device1 = route_data(7,7,(1,1))
+Device1.Goal = (4,4)
+Device1.route = [Device1.Goal]
+Device_info = [Device1] #Device_infoというリストにすべてのデバイスのオブジェクトを入れる
+Device_info[0].load_map('field.txt',Device_info[0].field)
+Device_info[0].format_OL()
+Device_info[0].search_route('field.txt',Device_info[0],Device_info[0].field)
+Device_info[0].reverse_route()
+Device_info[0].update_route()
+Device_info[0].show_route()
+'''
