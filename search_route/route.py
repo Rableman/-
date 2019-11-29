@@ -52,26 +52,26 @@ class route_data:
         device = random_setup.rand_map(1,5)
         self.field[device[0]][device[1]] = 1
 
-    def  update_map(self,file_name):
+    def  update_map(self,file_name,object_name):
         self.field = list()
-        Route.load_map(file_name)
+        object_name.load_map(file_name)
         for i in range(8):
-            Route.write_map(file_name)
+            object_name.write_map(file_name)
 
     def format_OL(self):
         self.OL.put(self.Start) #OLに初期状態を追加
         self.Cost[self.Start[1]][self.Start[0]] = 0
 
-    def search_route(self,file_name):
+    def search_route(self,file_name,object_name):
         #while文で探索する
         while not self.OL.empty():
-            Route.update_map(file_name)
+            #object_name.update_map(file_name,object_name)
             x = self.OL.get()
             self.CL[x[1]][x[0]]=1
             #Goalについた時の判定
             if(x == self.Goal):
                 break
-            Route.next(x)
+            object_name.next(x)
         if(x!=self.Goal):
             print(self.Goal)
             print("Fault\n")
@@ -131,13 +131,18 @@ class route_data:
         #探索したルートを表示
         for i in self.Route_Field:
             print(*i)
+    
+    def show_now_map(self,file_name,object_name):
+        object_name.load_map(file_name)
+
+
 
 #Route = route_data(7,7,(1,1),random_setup.rand_map(1,5))
 Route = route_data(7,7,(1,1),(5,5))
 
 Route.load_map('field.txt')
 Route.format_OL()
-Route.search_route('field.txt')
+Route.search_route('field.txt',Route)
 Route.reverse_route()
 Route.update_route()
 Route.show_route()
