@@ -42,12 +42,12 @@ class PlotFreq:
         self.db_data = 0
 
         #位置座標情報
-        self.grid = []
+        self.grid = self.init_grid()
 
     def init_grid(self):
-        for x in range(5):
-            for y in range(5):
-                self.grid[x][y] = 0
+        grid_num = 5
+        grid = [[0 for i in range(grid_num)] for i in range(grid_num)]
+        return grid
 
     def set_grid(self, coord_x, coord_y):
         self.init_grid()
@@ -93,6 +93,7 @@ class PlotFreq:
         dist_a = self.calc_dist(self.record(self.freqA))
         dist_b = self.calc_dist(self.record(self.freqB))
         dist_c = self.calc_dist(self.record(self.freqC))
+        
         x, y = self.calc_coord(dist_a, self.cos_rule(50, dist_a, dist_b))
         return x, y
 
@@ -145,6 +146,6 @@ class PlotFreq:
 if __name__=="__main__":
     plotwin=PlotFreq()
     x, y = plotwin.get_coord() 
-    print("Coordinate: [{0}][{1}]".format(x, y))
+    print("Coordinate: [{0}][{1}]".format(int(x), int(y)))
     plotwin.show_grid()
     plotwin.end_rec()
