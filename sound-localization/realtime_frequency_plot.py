@@ -74,8 +74,8 @@ class PlotWindow:
     def FFT_AMP(self, data):
         data=np.hamming(len(data))*data
         data=np.fft.fft(data)
-        data=np.real(data)
-        #data=np.abs(data)
+        #data=np.real(data)
+        data=np.abs(data)
         return data
 
 if __name__=="__main__":

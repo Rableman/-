@@ -3,6 +3,7 @@ import pyaudio
 import struct
 import matplotlib.pyplot as plt
 from scipy import signal
+import math
 
 def filt(data, s_freq, fp, fs, gp, gs, ftype):
     nyq = s_freq / 2                           #ナイキスト周波数
@@ -18,8 +19,11 @@ class PlotFreq:
     def __init__(self):
         #音源周波数
         self.freqA = 15000
-        self.freqB = 12000
+        self.sourceA = [0, 50]
+        self.freqB = 10000
+        self.sourceB = [50, 50]
         self.freqC = 11000
+        self.sourceC = [50, 0]
 
         #マイクインプット設定
         self.CHUNK=1024           #1度に読み取る音声のデータ幅
@@ -35,13 +39,26 @@ class PlotFreq:
         #音声データの格納場所(プロットデータ)
         self.data=np.zeros(self.CHUNK)
         self.axis=np.fft.fftfreq(len(self.data), d=1.0/self.RATE)
-        self.frq_data = []
-        self.db_data = []
+        self.db_data = 0
 
         #位置座標情報
-        self.grid = [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15],[16,17,18,19,20],[21,22,23,24,25]]
+        self.grid = []
 
-    def record(self):
+    def init_grid(self):
+        for x in range(5):
+            for y in range(5):
+                self.grid[x][y] = 0
+
+    def set_grid(self, coord_x, coord_y):
+        self.init_grid()
+        self.grid[coord_x][coord_y] = 1
+
+    def show_grid(self):
+        self.set_grid(0,0)
+        for x in range(5):
+            print(self.grid[x])
+
+    def record(self, freq):
         print("recstart")
         self.data=np.zeros(self.CHUNK)
         for i in range(0, int(self.RATE/self.CHUNK * self.record_seconds)): #秒数を指定して録音
@@ -49,25 +66,63 @@ class PlotFreq:
         self.fft_data=self.FFT_AMP(self.data) #音声データをフーリエ変換
         self.axis=np.fft.fftfreq(len(self.data), d=1.0/self.RATE) #周波数軸を生成
 
-        #カット処理用
+        #カット処理
         for i in range (len(self.fft_data)):
-            if self.axis[i] < 10000 or self.axis[i] > 16000:
+            if self.axis[i] < freq-100 or self.axis[i] > freq+100:
                 self.fft_data[i] = 0
                 self.axis[i] = 0
         self.axis = self.axis[self.axis.nonzero()]
         self.fft_data = self.fft_data[self.fft_data.nonzero()]
+
+        #ピーク検出
+        maxid = signal.argrelmax(self.fft_data, order=3000)
+        self.db_data = max(self.fft_data[maxid])
+        print(self.db_data)
+        #self.db_data.append(self.fft_data[maxid])
+
         #debug用
-        #plt.plot(self.axis, self.fft_data, label="test") 
-        #plt.plot(self.axis[maxid], self.fft_data[maxid], "ro")
-        #plt.show()
+        plt.plot(self.axis, self.fft_data, label="test") 
+        plt.plot(self.axis[maxid], self.fft_data[maxid], "ro")
+        plt.show()
+
+        #db_val = self.get_db(self.db_data) #デシベル計算
+        db_val = self.db_data
+        return db_val
 
     def get_coord(self):
-        #ピーク検出
-        maxid = signal.argrelmax(self.fft_data, order=1000)
-        self.db_data.append(self.fft_data[maxid])
-        
+        dist_a = self.calc_dist(self.record(self.freqA))
+        dist_b = self.calc_dist(self.record(self.freqB))
+        dist_c = self.calc_dist(self.record(self.freqC))
+        x, y = self.calc_coord(dist_a, self.cos_rule(50, dist_a, dist_b))
+        return x, y
 
+    def get_db(self, amp, base = 1.0):
+        ret = 20 * math.log10(amp/base)
+        print("%2.2f[dB]" % ret)
+        return ret
         
+    def calc_dist(self, amp):
+        #音の減衰式 y = -28.85ln(x) + 83.158
+        dist = -28.85 * math.log(amp) + 83.158
+        print("%2.2lf[cm]" % dist)
+        return dist
+
+    def cos_rule(self, a, b, c):
+        ret = (a**2 + c**2 - b**2)/(2 * a * c)
+        ret = math.acos(ret)
+        return ret
+
+    def calc_coord(self, dist, ang):
+        u = dist * math.cos(ang)
+        v = dist * math.sin(ang)
+        theta = math.atan((self.sourceA[1]-self.sourceB[1])/(self.sourceA[0]-self.sourceB[0]))
+        rotsin, rotcos = math.sin(theta), math.cos(theta)
+        rot = np.matrix([[rotcos, -rotsin],[rotsin, rotcos]])
+        coord = rot * np.matrix([[u],[v]]) + np.matrix([[self.sourceA[0]],[self.sourceA[1]]])
+        x = coord[0]
+        y = coord[1]
+        return x, y
+
     def end_rec(self):
         self.stream.stop_stream()
         self.stream.close()
@@ -89,8 +144,7 @@ class PlotFreq:
 
 if __name__=="__main__":
     plotwin=PlotFreq()
-    for i in range(0,1):
-        plotwin.record()
-    print(plotwin.db_data)
-
+    x, y = plotwin.get_coord() 
+    print("Coordinate: [{0}][{1}]".format(x, y))
+    plotwin.show_grid()
     plotwin.end_rec()
