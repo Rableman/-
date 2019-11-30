@@ -45,7 +45,7 @@ class PlotWindow:
         self.win=pg.GraphicsWindow()
         self.win.setWindowTitle("SpectrumAnalyzer")
         self.plt=self.win.addPlot() #プロットのビジュアル関係
-        self.plt.setYRange(-20,20)    #y軸の制限
+        self.plt.setYRange(0,20)    #y軸の制限
 
         #アップデート時間設定
         self.timer=QtCore.QTimer()
@@ -59,7 +59,7 @@ class PlotWindow:
         self.fft_data=self.FFT_AMP(self.data)
         self.axis=np.fft.fftfreq(len(self.data), d=1.0/self.RATE)
         for i in range (len(self.fft_data)):
-            if self.axis[i] < 700:
+            if self.axis[i] < 7000:
                 self.fft_data[i] = 0
         self.plt.plot(x=self.axis, y=self.fft_data, clear=True, pen="y")  #symbol="o", symbolPen="y", symbolBrush="b")
 
@@ -68,7 +68,7 @@ class PlotWindow:
         #バイナリ → 数値(int16)に変換
         #32768.0=2^16で割ってるのは正規化(絶対値を1以下にすること)
         ret=np.frombuffer(ret, dtype="int16")/32768.0
-        ret=filt(ret, self.RATE, 16000, 17000, 3, 40, "low")
+        #ret=filt(ret, self.RATE, 18000, 19000, 3, 40, "low")
         return ret
 
     def FFT_AMP(self, data):

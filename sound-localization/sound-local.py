@@ -4,6 +4,7 @@ import struct
 import matplotlib.pyplot as plt
 from scipy import signal
 import math
+import csv
 
 def filt(data, s_freq, fp, fs, gp, gs, ftype):
     nyq = s_freq / 2                           #ナイキスト周波数
@@ -18,17 +19,17 @@ class PlotFreq:
 
     def __init__(self):
         #音源周波数
-        self.freqA = 15000
+        self.freqA = 18400
         self.sourceA = [0, 50]
-        self.freqB = 10000
+        self.freqB = 18700
         self.sourceB = [50, 50]
-        self.freqC = 11000
+        self.freqC = 15000
         self.sourceC = [50, 0]
 
         #マイクインプット設定
         self.CHUNK=1024           #1度に読み取る音声のデータ幅
         self.RATE=44100            #サンプリング周波数
-        self.record_seconds=1      #録音時間[ms]
+        self.record_seconds=2      #録音時間[ms]
         self.audio=pyaudio.PyAudio()
         self.stream=self.audio.open(format=pyaudio.paInt16,
                                     channels=1,
@@ -37,9 +38,9 @@ class PlotFreq:
                                     frames_per_buffer=self.CHUNK)
 
         #音声データの格納場所(プロットデータ)
-        self.data=np.zeros(self.CHUNK)
-        self.axis=np.fft.fftfreq(len(self.data), d=1.0/self.RATE)
-        self.db_data = 0
+        #self.data=np.zeros(self.CHUNK)
+        #self.axis=np.fft.fftfreq(len(self.data), d=1.0/self.RATE)
+        #self.db_data = 0
 
         #位置座標情報
         self.grid = self.init_grid()
@@ -59,10 +60,13 @@ class PlotFreq:
             print(self.grid[x])
 
     def record(self, freq):
-        print("recstart")
+        print("recstart", freq)
         self.data=np.zeros(self.CHUNK)
+
+        #録音
         for i in range(0, int(self.RATE/self.CHUNK * self.record_seconds)): #秒数を指定して録音
             self.data=np.append(self.data,self.AudioInput())
+
         self.fft_data=self.FFT_AMP(self.data) #音声データをフーリエ変換
         self.axis=np.fft.fftfreq(len(self.data), d=1.0/self.RATE) #周波数軸を生成
 
@@ -78,7 +82,6 @@ class PlotFreq:
         maxid = signal.argrelmax(self.fft_data, order=3000)
         self.db_data = max(self.fft_data[maxid])
         print(self.db_data)
-        #self.db_data.append(self.fft_data[maxid])
 
         #debug用
         plt.plot(self.axis, self.fft_data, label="test") 
@@ -90,21 +93,27 @@ class PlotFreq:
         return db_val
 
     def get_coord(self):
-        dist_a = self.calc_dist(self.record(self.freqA))
-        dist_b = self.calc_dist(self.record(self.freqB))
-        dist_c = self.calc_dist(self.record(self.freqC))
+        dist_a = self.calc_dist(self.record(self.freqA), self.freqA)
+        dist_b = self.calc_dist(self.record(self.freqB), self.freqB)
+        dist_c = self.calc_dist(self.record(self.freqC), self.freqC)
         
         x, y = self.calc_coord(dist_a, self.cos_rule(50, dist_a, dist_b))
         return x, y
 
     def get_db(self, amp, base = 1.0):
-        ret = 20 * math.log10(amp/base)
+        ret = 20 * math.log10((amp/base))
         print("%2.2f[dB]" % ret)
-        return ret
+        return abs(ret)
         
-    def calc_dist(self, amp):
-        #音の減衰式 y = -28.85ln(x) + 83.158
-        dist = -28.85 * math.log(amp) + 83.158
+    def calc_dist(self, amp, freq):
+        #11000Hz: y = -28.85ln(x) + 83.158
+        #21000Hz: y = -32.8ln(x) + 60.863
+        if freq == self.freqA:
+            dist = -28.85 * math.log(amp) + 83.158
+        elif freq == self.freqB:
+            dist = -32.81 * math.log(amp) + 60.863
+        elif freq == self.freqC:
+            dist = 0
         print("%2.2lf[cm]" % dist)
         return dist
 
@@ -134,7 +143,7 @@ class PlotFreq:
         #バイナリ → 数値(int16)に変換
         #32768.0=2^16で割ってるのは正規化(絶対値を1以下にすること)
         ret=np.frombuffer(ret, dtype="int16")/32768.0
-        ret=filt(ret, self.RATE, 16000, 17000, 3, 40, "low")
+        #ret=filt(ret, self.RATE, 18500, 19000, 3, 40, "low")
         return ret
 
     def FFT_AMP(self, data):
@@ -145,7 +154,24 @@ class PlotFreq:
 
 if __name__=="__main__":
     plotwin=PlotFreq()
-    x, y = plotwin.get_coord() 
-    print("Coordinate: [{0}][{1}]".format(int(x), int(y)))
-    plotwin.show_grid()
+    freq = 18700
+    '''
+    data = []
+    for i in range(10):
+        data.append(plotwin.record(21000),21000)
+    with open('data/fdata.csv', 'a') as f:
+        writer = csv.writer(f, lineterminator='\n')
+        writer.writerow(data)
+    f.close()
+    '''
+    plotwin.record(freq)
+    fd = open("100count_notexits.log", "a+")
+    for i in range(10):
+        print(plotwin.calc_dist(plotwin.record(freq),freq), file=fd)
+
+    #x, y = plotwin.get_coord() 
+    #print("Coordinate: [{0}][{1}]".format(int(x), int(y)))
+    #plotwin.show_grid()
     plotwin.end_rec()
+
+    
