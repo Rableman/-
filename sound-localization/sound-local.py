@@ -3,8 +3,13 @@ import pyaudio
 import struct
 import matplotlib.pyplot as plt
 from scipy import signal
+from scipy.optimize import curve_fit
 import math
 import csv
+
+
+def nonlinear_fit(x, a, b):
+    return a * math.log(x) + c
 
 def filt(data, s_freq, fp, fs, gp, gs, ftype):
     nyq = s_freq / 2                           #ナイキスト周波数
@@ -59,8 +64,28 @@ class PlotFreq:
         for x in range(5):
             print(self.grid[x])
 
+    def gen_func(self, freq):
+        n = 2
+        leng = 3
+        data = []
+        array_x = np.zeros(leng)
+        array_y = np.zeros(leng)
+
+        for i in range(leng):
+            array_x[i] = input("input dist:")
+            for j in range(n):
+                print("recording %d..." % j)
+                data.append(self.record(freq))
+            ave_data = sum(data)/n
+            array_y[i] = ave_data
+
+        param, cov = curve_fit(nonlinear_fit, array_x, array_y)
+        y = param[0] * math.log(x) + param[1]
+        plt.plot(x, y)
+        plt.show()
+
     def record(self, freq):
-        print("recstart", freq)
+        #print("recstart", freq)
         self.data=np.zeros(self.CHUNK)
 
         #録音
@@ -155,6 +180,7 @@ class PlotFreq:
 if __name__=="__main__":
     plotwin=PlotFreq()
     freq = 18700
+    plotwin.gen_func(15000)
     '''
     data = []
     for i in range(10):
@@ -164,10 +190,10 @@ if __name__=="__main__":
         writer.writerow(data)
     f.close()
     '''
-    plotwin.record(freq)
-    fd = open("100count_notexits.log", "a+")
-    for i in range(10):
-        print(plotwin.calc_dist(plotwin.record(freq),freq), file=fd)
+    #plotwin.record(freq)
+    #fd = open("100count_notexits.log", "a+")
+    #for i in range(10):
+    #    print(plotwin.calc_dist(plotwin.record(freq),freq), file=fd)
 
     #x, y = plotwin.get_coord() 
     #print("Coordinate: [{0}][{1}]".format(int(x), int(y)))
