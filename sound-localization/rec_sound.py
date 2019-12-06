@@ -2,9 +2,15 @@ import numpy as np
 import pyaudio
 import matplotlib.pyplot as plt
 from scipy import signal
+from scipy.optimize import curve_fit
 import math
 import csv
 
+#対数関数
+def log_func(x, a, b):
+    return a * np.log(x) + b
+
+#リストの中身を定数で割る関数
 def div_list(lists, num):
     if len(lists) == 1:  return lists[0]
     for i in range(len(lists)):
@@ -51,7 +57,7 @@ class Record:
         return data
     
     #周波数と録音時間を指定
-    def record(self, freq, record_seconds):
+    def record(self, freq, record_seconds, debug = True):
         #print("recstart", freq)
         self.data=np.zeros(self.CHUNK)
 
@@ -73,14 +79,15 @@ class Record:
         #ピーク検出
         maxid = signal.argrelmax(self.fft_data, order=3000)
         db_val = max(self.fft_data[maxid])
-        print(db_val)
 
-        #debug用
-        plt.plot(self.axis, self.fft_data, label="test") 
-        plt.plot(self.axis[maxid], self.fft_data[maxid], "ro")
-        plt.show()
+        if debug == True:
+            #debug用
+            print(db_val)
+            plt.plot(self.axis, self.fft_data, label="test") 
+            plt.plot(self.axis[maxid], self.fft_data[maxid], "ro")
+            plt.show()
+            self.get_db(db_val)
 
-        self.get_db(db_val)
         return db_val
 
     #デシベル計算
@@ -89,7 +96,32 @@ class Record:
         print("%2.2f[dB]" % ret)
         return ret
 
-    #録音終了
+    def get_data(self, freq, rec_sec, num):
+        #データ
+        x = [10,20,30,40,50,60,70]
+        data = []
+        
+        #録音設定
+        freq = int(input("input freq: "))
+        rec_sec = int(input("input recsec: "))
+        num = int(input("how many times? : "))
+        
+        #10~70cm毎にnum回録音して振幅データ生成
+        for i in range(7):
+            print("measuring %d cm" % (i+1)+10)
+            for i in range(num):
+                data.append(plotwin.record(freq, rec_sec))
+            input("Press enter to go next")
+        
+        #計測データをもとに関数生成
+        param, cov = curve_fit(log_func, x, data)
+        y = log_func(x, param[0], param[1])
+        plt.plot(x, y)
+        plt.plot(x, data, "ro")
+        plt.show()
+        return param
+
+    #録音終了処理
     def end_rec(self):
         self.stream.stop_stream()
         self.stream.close()
@@ -97,13 +129,8 @@ class Record:
 
 if __name__=="__main__":
     plotwin=Record()
-    freq = int(input("input freq"))
-    rec_sec = int(input("input recsec"))
-    fd = open("Freqdata.csv", "a+")
-
-    for i in range(1):
-        print(plotwin.record(freq, recsec), file=fd)
-
-    fd.close()
+    plotwin.get_data()
+    #fd = open("Freqdata.csv", "a+")
+    #fd.close()
     
     plotwin.end_rec()
