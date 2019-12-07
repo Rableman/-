@@ -17,6 +17,7 @@ def div_list(lists, num):
         lists[i] = lists[i]/num
     return lists   
 
+#フィルター関数
 def filt(data, s_freq, fp, fs, gp, gs, ftype):
     nyq = s_freq / 2                           #ナイキスト周波数
     Wp = div_list(fp,nyq)
@@ -70,7 +71,7 @@ class Record:
 
         #カット処理(+-100Hz)
         for i in range (len(self.fft_data)):
-            if self.axis[i] < freq-1000 or self.axis[i] > freq+1000:
+            if self.axis[i] < freq-100 or self.axis[i] > freq+100:
                 self.fft_data[i] = 0
                 self.axis[i] = 0
         self.axis = self.axis[self.axis.nonzero()]
@@ -78,25 +79,24 @@ class Record:
 
         #ピーク検出
         maxid = signal.argrelmax(self.fft_data, order=3000)
-        db_val = max(self.fft_data[maxid])
+        maxamp = max(self.fft_data[maxid])
 
         if debug == True:
             #debug用
-            print(db_val)
+            print(maxamp)
             plt.plot(self.axis, self.fft_data, label="test") 
             plt.plot(self.axis[maxid], self.fft_data[maxid], "ro")
             plt.show()
-            self.get_db(db_val)
+            print("%2.2f[dB]" % self.get_db(maxamp))
 
-        return db_val
+        return maxamp
 
     #デシベル計算
     def get_db(self, amp, base = 1.0):
-        ret = 20 * math.log10((amp/base))
-        print("%2.2f[dB]" % ret)
-        return ret
+        return math.log10((amp/base))
 
-    def get_data(self, freq, rec_sec, num):
+    #関数生成
+    def get_func(self):
         #データ
         x = [10,20,30,40,50,60,70]
         data = []
@@ -108,9 +108,9 @@ class Record:
         
         #10~70cm毎にnum回録音して振幅データ生成
         for i in range(7):
-            print("measuring %d cm" % (i+1)+10)
+            print("measuring %d cm" % ((i+1)*10))
             for i in range(num):
-                data.append(plotwin.record(freq, rec_sec))
+                data.append(self.record(freq, rec_sec))
             input("Press enter to go next")
         
         #計測データをもとに関数生成
@@ -119,7 +119,7 @@ class Record:
         plt.plot(x, y)
         plt.plot(x, data, "ro")
         plt.show()
-        return param
+        return param # y = a * log(x) + b の[a,b]を返す
 
     #録音終了処理
     def end_rec(self):
@@ -129,7 +129,7 @@ class Record:
 
 if __name__=="__main__":
     plotwin=Record()
-    plotwin.get_data()
+    plotwin.get_func()
     #fd = open("Freqdata.csv", "a+")
     #fd.close()
     
