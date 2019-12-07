@@ -1,16 +1,17 @@
 import numpy as np
 import math
-import rec_sound as rec
+import rec_sound
 
 class Calcdist: 
 
     def __init__(self):
 
+        self.rec = rec_sound.Record()
         #音源周波数
         #第１音源
         self.freqA = 18400
         self.sourceA = [0, 5]
-        #self.funcA = rec.get_funcを使う
+        #self.funcA = rec.get_funcで得られた関数を使う
         #第２音源
         self.freqB = 18700
         self.sourceB = [5, 5]
@@ -23,6 +24,10 @@ class Calcdist:
         #位置座標情報
         self.grid = self.init_grid()
     
+    def get_dist(self):
+        dist_a = self.calc_dist(self.rec.record(self.freqA), self.freqA)
+        dist_b = self.calc_dist(self.rec.record(self.freqB), self.freqB)
+
     #音の振幅を元に距離を計算 
     def calc_dist(self, amp, freq):
         #11000Hz: y = -28.85ln(x) + 83.158
