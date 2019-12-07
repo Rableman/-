@@ -16,30 +16,32 @@ class Calcdist:
         self.freqB = 18700
         self.sourceB = [5, 5]
         #self.funcB = 
-        #第３音源
-        self.freqC = 15000
-        self.sourceC = [5, 0]
-        #self.funcC = 
 
         #位置座標情報
         self.grid = self.init_grid()
     
-    def get_dist(self):
-        dist_a = self.calc_dist(self.rec.record(self.freqA), self.freqA)
-        dist_b = self.calc_dist(self.rec.record(self.freqB), self.freqB)
+    def get_dist(self, debug =True):
+        sec = 2 #録音時間
+        dist=[]
+        source=["A","B"]
+        dist.append = self.calc_dist(self.rec.record(self.freqA,sec), self.freqA)
+        dist.append = self.calc_dist(self.rec.record(self.freqB,sec), self.freqB)
+        if debug == True: 
+            for i in range(2):
+                print("Dist_%s: %d[cm]" % source[i], dist[i])
+        return dist
 
     #音の振幅を元に距離を計算 
     def calc_dist(self, amp, freq):
         #11000Hz: y = -28.85ln(x) + 83.158
         #21000Hz: y = -32.8ln(x) + 60.863
         if freq == self.freqA:
-            dist = -28.85 * math.log(amp) + 83.158
+            ret = -28.85 * math.log(amp) + 83.158
         elif freq == self.freqB:
-            dist = -32.81 * math.log(amp) + 60.863
+            ret = -32.81 * math.log(amp) + 60.863
         elif freq == self.freqC:
-            dist = 0
-        print("%2.2lf[cm]" % dist)
-        return dist
+            ret = 0
+        return ret
 
     #余弦定理
     def cos_rule(self, a, b, c):
@@ -47,7 +49,6 @@ class Calcdist:
         ret = math.acos(ret)
         return ret
     
-    '''座標関連は保留中
     #座標初期化
     def init_grid(self):
         grid_num = 5
@@ -60,23 +61,19 @@ class Calcdist:
         for x in range(5):
             print(self.grid[x])
 
+    #座標提供
+    def get_coord(self):
+        dist = self.get_dist()        
+        x, y = self.calc_coord(dist[0], self.cos_rule(dist[0], dist[1], self.sourceB[0] - self.sourceA[0]))
+        #debug
+        self.grid[x][y] = 1
+        self.show_grid()
+        return x, y
+
     #座標算出
     def calc_coord(self, dist, ang):
         u = dist * math.cos(ang)
         v = dist * math.sin(ang)
-        theta = math.atan((self.sourceA[1]-self.sourceB[1])/(self.sourceA[0]-self.sourceB[0]))
-        rotsin, rotcos = math.sin(theta), math.cos(theta)
-        rot = np.matrix([[rotcos, -rotsin],[rotsin, rotcos]])
-        coord = rot * np.matrix([[u],[v]]) + np.matrix([[self.sourceA[0]],[self.sourceA[1]]])
-        x = coord[0]
-        y = coord[1]
+        x = self.sourceA[0] + round(u)
+        y = self.sourceA[1] - round(v)
         return x, y
-
-    #座標提供
-    def get_coord(self):
-        dist_a = self.calc_dist(rec.Record.record(self.freqA), self.freqA)
-        dist_b = self.calc_dist(rec.Record.record(self.freqB), self.freqB)
-        
-        x, y = self.calc_coord(dist_a, self.cos_rule(50, dist_a, dist_b))
-        return x, y
-    '''
