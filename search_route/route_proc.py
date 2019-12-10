@@ -9,34 +9,39 @@ import numpy as np
 
 class route_data:
     def __init__(self,h,w,start):
-        self.H = h #N*Mのグリッド
+        self.H = h #縦幅H*横幅Wのグリッド
         self.W = w
         self.field = list() #グリッド上の情報を格納
         self.Route_Field = np.zeros((self.H,self.W),dtype=int) #最終経路の表示に使用
         self.CL = np.zeros((self.H,self.W), dtype=int) #CLは2次元配列で用意
         self.OL = queue.Queue() #キューはモジュールを用いる
         self.Cost = np.zeros((self.H,self.W), dtype=int) + 999 #経路を辿るためのコスト
-        self.Start = start #Start位置とGoal位置はあらかじめタプル型で用意
-        #self.Goal
-        #self.route = [self.Goal]
+        self.Start = start #Start位置はあらかじめタプル型で用意
+        self.flag = 0 #フラグが0のときはゴールが割り振られていない 1のときはゴールが割り振られている
+        self.route = [] #道順はここに格納される
 
     def next(self,x):
+        #行名がy軸 列名がx軸に対応しているため、(x[1],x[0])の座標となる
         #上に進めるか判定
         if(self.field[x[1]-1][x[0]]==0 and self.CL[x[1]-1][x[0]]==0):
             self.OL.put((x[0],x[1]-1))
             self.Cost[x[1]-1][x[0]] = self.Cost[x[1]][x[0]] + 1 
+            #print('上')
         #下に進めるか判定
         if(self.field[x[1]+1][x[0]]==0 and self.CL[x[1]+1][x[0]]==0):
             self.OL.put((x[0],x[1]+1))
             self.Cost[x[1]+1][x[0]] = self.Cost[x[1]][x[0]] + 1
+            #print('下')
         #右に進めるか判定
         if(self.field[x[1]][x[0]+1]==0 and self.CL[x[1]][x[0]+1]==0):
             self.OL.put((x[0]+1,x[1]))
             self.Cost[x[1]][x[0]+1] = self.Cost[x[1]][x[0]] + 1
+            #print('右')
         #左に進めるか判定
         if(self.field[x[1]][x[0]-1]==0 and self.CL[x[1]][x[0]-1]==0):
             self.OL.put((x[0]-1,x[1]))
             self.Cost[x[1]][x[0]-1] = self.Cost[x[1]][x[0]] + 1
+            #print('左')
         return
 
     '''
@@ -58,9 +63,11 @@ class route_data:
     def search_route(self,file_name,object_name,var_name):
         #while文で探索する
         while not self.OL.empty():
-            #object_name.update_map(file_name,object_name,var_name)
+            #print('OL',self.OL.qsize())
             x = self.OL.get()
+            #print('got OL ',x)
             self.CL[x[1]][x[0]]=1
+            #print('CL',self.CL)
             #Goalについた時の判定
             if(x == self.Goal):
                 break
@@ -77,36 +84,36 @@ class route_data:
         while cost_now > 0:
             #上から来た場合
             try:
-                if self.Cost[point_now[0] - 1][ point_now[1]] == cost_now - 1:
+                if self.Cost[point_now[1] - 1][ point_now[0]] == cost_now - 1:
                     #更新
-                    point_now = (point_now[0] - 1, point_now[1])
+                    point_now = (point_now[0], point_now[1]-1)
                     cost_now = cost_now - 1
                     #記録
                     self.route.append(point_now)
             except: pass
             #下から来た場合
             try:
-                if self.Cost[point_now[0] + 1, point_now[1]] == cost_now - 1:
+                if self.Cost[point_now[1] + 1, point_now[0]] == cost_now - 1:
                     #更新
-                    point_now = (point_now[0] + 1, point_now[1])
+                    point_now = (point_now[0], point_now[1]+1)
                     cost_now = cost_now - 1
                     #記録
                     self.route.append(point_now)
             except: pass
             #左から来た場合    
             try:
-                if self.Cost[point_now[0], point_now[1] - 1] == cost_now - 1:
+                if self.Cost[point_now[1], point_now[0] - 1] == cost_now - 1:
                     #更新
-                    point_now = (point_now[0], point_now[1] - 1)
+                    point_now = (point_now[0]-1, point_now[1])
                     cost_now = cost_now - 1
                     #記録
                     self.route.append(point_now)
             except: pass
             #右から来た場合
             try:
-                if self.Cost[point_now[0], point_now[1] + 1] == cost_now - 1:
+                if self.Cost[point_now[1], point_now[0] + 1] == cost_now - 1:
                     #更新
-                    point_now = (point_now[0], point_now[1] + 1)
+                    point_now = (point_now[0]+1, point_now[1])
                     cost_now = cost_now - 1
                     #記録
                     self.route.append(point_now)
@@ -124,9 +131,3 @@ class route_data:
         #探索したルートを表示
         for i in self.Route_Field:
             print(*i)
-    '''
-    def show_now_map(self,file_name,object_name,var_name):
-        object_name.load_map(file_name,var_name)
-    '''
-
-#Device1 = route_data(7,7,(1,1))
