@@ -13,48 +13,29 @@ class route_data:
         self.Route_Field = np.zeros((self.H,self.W),dtype=int) #最終経路の表示に使用
         self.CL = np.zeros((self.H,self.W), dtype=int) #CLは2次元配列で用意
         self.OL = list() #OLはリストを用いて実装
-        self.Cost = np.zeros((self.H,self.W), dtype=int) + 999 #経路を辿るためのコスト
+        self.OL_can = list() #next()内での候補の格納に使用
         self.Start = start #Start位置はあらかじめタプル型で用意
         self.flag = 0 #フラグが0のときはゴールが割り振られていない 1のときはゴールが割り振られている
-        self.route = list() #自分の道順はここに格納される
-        
-        self.OL_can = list() #next()内での候補の格納に使用
-        self.passed_list = [start] #探索した座標リスト
+        self.passed_list = [start] #探索した座標リスト(このリストが最終的に経路となる)
 
+    #x座標の上下左右のうち進める部分を探索する
     def next(self,x):
         #行名がy軸 列名がx軸に対応しているため、(x[1],x[0])の座標となる
         #上に進めるか判定
         if(self.field[x[1]-1][x[0]]==0 and self.CL[x[1]-1][x[0]]==0):
-            #self.OL.append((x[0],x[1]-1))
             self.OL_can.append((x[0],x[1]-1))
-            self.Cost[x[1]-1][x[0]] = self.Cost[x[1]][x[0]] + 1 
-            #print('上')
         #下に進めるか判定
         if(self.field[x[1]+1][x[0]]==0 and self.CL[x[1]+1][x[0]]==0):
-            #self.OL.append((x[0],x[1]+1))
             self.OL_can.append((x[0],x[1]+1))
-            self.Cost[x[1]+1][x[0]] = self.Cost[x[1]][x[0]] + 1
-            #print('下')
         #右に進めるか判定
         if(self.field[x[1]][x[0]+1]==0 and self.CL[x[1]][x[0]+1]==0):
-            #self.OL.append((x[0]+1,x[1]))
             self.OL_can.append((x[0]+1,x[1]))
-            self.Cost[x[1]][x[0]+1] = self.Cost[x[1]][x[0]] + 1
-            #print('右')
         #左に進めるか判定
         if(self.field[x[1]][x[0]-1]==0 and self.CL[x[1]][x[0]-1]==0):
-            #self.OL.append((x[0]-1,x[1]))
             self.OL_can.append((x[0]-1,x[1]))
-            self.Cost[x[1]][x[0]-1] = self.Cost[x[1]][x[0]] + 1
-            #print('左')
         return
-    '''
-    def format_OL(self):
-        self.OL.append(self.Start) #OLに初期状態を追加
-        self.Cost[self.Start[1]][self.Start[0]] = 0
-    '''
 
-    #heapqを使ってA*アルゴリズムを実装する
+    #heapq(優先度キュー)を使ってA*アルゴリズムを実装し、経路探索を行う
     def search_route(self,file_name,object_name,var_name):
         #初期スコアを計算
         start_score = map_proc.map_func.cal_distance(self.passed_list) + map_proc.map_func.cal_heuristic(self.Start,self.Goal)
@@ -72,71 +53,35 @@ class route_data:
             if(x == self.Goal):
                 print(self.passed_list)
                 break
+            #4方向について探索
             object_name.next(x)
+            #探索可能な方向についてスコアを計算
             for pos in self.OL_can:
+                #経路リストに探索中の座標を追加した候補リストを作成
                 new_passed_list = self.passed_list + [pos]
+                #候補のリストのスコアを計算
                 pos_score = map_proc.map_func.cal_distance(new_passed_list) + map_proc.map_func.cal_heuristic(pos,self.Goal)
+                #探索中の座標が他の経路で探索済みか確認
+                #探索済みの場合は、前回のスコアと今回のスコアを比較
+                #今回のスコアのほうが大きい場合、次の方角の座標の探索へ
                 if pos in checked and checked[pos] <= pos_score:
                     continue
+                #今回のスコアのほうが小さい場合、チェック済みリストに格納
                 checked[pos] = pos_score
+                #探索ヒープに経路リストを格納
                 heapq.heappush(self.OL,(pos_score,new_passed_list))
+            self.OL_can = list()
+        #探索失敗時
         if(x!=self.Goal):
             print("Fault\n")
             sys.exit()
 
-#reverse_routeも終わらない
-    def reverse_route(self):
-        # ゴールから逆順でルート計算
-        point_now = self.Goal
-        cost_now = self.Cost[self.Goal[0], self.Goal[1]]
-        while cost_now > 0:
-            #上から来た場合
-            try:
-                if self.Cost[point_now[1] - 1][ point_now[0]] == cost_now - 1:
-                    #更新
-                    point_now = (point_now[0], point_now[1]-1)
-                    cost_now = cost_now - 1
-                    #記録
-                    self.route.append(point_now)
-            except: pass
-            #下から来た場合
-            try:
-                if self.Cost[point_now[1] + 1, point_now[0]] == cost_now - 1:
-                    #更新
-                    point_now = (point_now[0], point_now[1]+1)
-                    cost_now = cost_now - 1
-                    #記録
-                    self.route.append(point_now)
-            except: pass
-            #左から来た場合    
-            try:
-                if self.Cost[point_now[1], point_now[0] - 1] == cost_now - 1:
-                    #更新
-                    point_now = (point_now[0]-1, point_now[1])
-                    cost_now = cost_now - 1
-                    #記録
-                    self.route.append(point_now)
-            except: pass
-            #右から来た場合
-            try:
-                if self.Cost[point_now[1], point_now[0] + 1] == cost_now - 1:
-                    #更新
-                    point_now = (point_now[0]+1, point_now[1])
-                    cost_now = cost_now - 1
-                    #記録
-                    self.route.append(point_now)
-            except: pass
-        #ルートを逆順にする
-        self.route = self.route[::-1]
-        print(self.route)
-
+    #通る経路を1で埋める
     def update_route(self):
-        #通る経路を1で埋める
-        #for route_i in self.route:
         for route_i in self.passed_list:
             self.Route_Field[route_i[0]][route_i[1]] = 1
 
+    #探索したルートを表示
     def show_route(self):
-        #探索したルートを表示
         for i in self.Route_Field:
             print(*i)
