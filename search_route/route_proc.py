@@ -16,7 +16,7 @@ class route_data:
         self.OL_can = list() #next()内での候補の格納に使用
         self.Start = start #Start位置はあらかじめタプル型で用意
         self.flag = 0 #フラグが0のときはゴールが割り振られていない 1のときはゴールが割り振られている
-        self.passed_list = [start] #探索した座標リスト(このリストが最終的に経路となる)
+        self.Passed_list = [start] #探索した座標リスト(このリストが最終的に経路となる)
 
     #x座標の上下左右のうち進める部分を探索する
     def next(self,x):
@@ -38,27 +38,27 @@ class route_data:
     #heapq(優先度キュー)を使ってA*アルゴリズムを実装し、経路探索を行う
     def search_route(self,file_name,object_name,var_name):
         #初期スコアを計算
-        start_score = map_proc.map_func.cal_distance(self.passed_list) + map_proc.map_func.cal_heuristic(self.Start,self.Goal)
+        start_score = map_proc.map_func.cal_distance(self.Passed_list) + map_proc.map_func.cal_heuristic(self.Start,self.Goal)
         #探索済み座標とその座標にたどり着いた経路のスコアを格納
         checked = {self.Start: start_score}
         #探索ヒープに経路リストを格納
-        heapq.heappush(self.OL,(start_score,self.passed_list))
+        heapq.heappush(self.OL,(start_score,self.Passed_list))
         #while文で探索する
         while len(self.OL) > 0:
-            score, self.passed_list = heapq.heappop(self.OL)
+            score, self.Passed_list = heapq.heappop(self.OL)
             #xは現在探索している座標
-            x = self.passed_list[-1]
+            x = self.Passed_list[-1]
             self.CL[x[1]][x[0]] = 1
             #Goalについた時の判定
             if(x == self.Goal):
-                print(self.passed_list)
+                print(self.Passed_list)
                 break
             #4方向について探索
             object_name.next(x)
             #探索可能な方向についてスコアを計算
             for pos in self.OL_can:
                 #経路リストに探索中の座標を追加した候補リストを作成
-                new_passed_list = self.passed_list + [pos]
+                new_passed_list = self.Passed_list + [pos]
                 #候補のリストのスコアを計算
                 pos_score = map_proc.map_func.cal_distance(new_passed_list) + map_proc.map_func.cal_heuristic(pos,self.Goal)
                 #探索中の座標が他の経路で探索済みか確認
@@ -78,7 +78,7 @@ class route_data:
 
     #通る経路を1で埋める
     def update_route(self):
-        for route_i in self.passed_list:
+        for route_i in self.Passed_list:
             self.Route_Field[route_i[0]][route_i[1]] = 1
 
     #探索したルートを表示
