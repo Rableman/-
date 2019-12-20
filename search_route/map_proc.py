@@ -1,24 +1,27 @@
 #coding utf-8
 
 class map_func:
-    def load_map(file_name,var_name):
-        #迷路の情報をfieldにリストで格納
+    #迷路の情報をfield_nameにリストで格納
+    def load_map(file_name,field_name):
         f = open(file_name,'r')
         for row in f:
             row_re = row.replace('\n', '')
             row_new = list()
-            for i in row_re: #文字から数値に変換
+            #文字から数値に変換
+            for i in row_re:
                 row_new.append(int(i))
-            var_name.append(list(row_new))
+            field_name.append(list(row_new))
         f.close()
-        
+    
+    #ユークリッド距離を計算    
     def cal_heuristic(start,goal):
-        #ユークリッド距離(平方根は取らない)を計算
         dis = ((goal[0]-start[0])**2+(goal[1]-start[1])**2)**0.5
         return dis
 
+    #たどってきた経路の長さを計算
     def cal_distance(path):
         return len(path)
+    
     '''
     def write_map(self,file_name):
         device = random_setup.random_set.rand_map(1,5) #今度ランダムじゃないものに置き換える？
