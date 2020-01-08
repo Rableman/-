@@ -13,7 +13,8 @@ Device_info = [Device1,Device2] #Device_infoというリストにすべてのデ
 goal_proc.goal_func.search_goal(Common_data.ret_goal_field(),Device_info,Common_data.ret_dev_sum())
 
 for i in range (Common_data.ret_dev_sum()):
-    map_proc.map_func.load_map('field.txt',Device_info[i].field)
-    Device_info[i].search_route('field.txt',Device_info[i],Device_info[i].field)
+    Device_info[i].field = Common_data.Goal_field
+    map_proc.map_func.del_my_goal(Device_info[i])
+    Device_info[i].search_route(Device_info[i],Device_info[i].field)
     Device_info[i].update_route()
     Device_info[i].show_route()
