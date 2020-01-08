@@ -12,6 +12,10 @@ class map_func:
                 row_new.append(int(i))
             field_name.append(list(row_new))
         f.close()
+
+    def del_my_goal(object_name):
+        x,y = object_name.Goal
+        object_name.field[x][y] = 0
     
     #ユークリッド距離を計算    
     def cal_heuristic(start,goal):
@@ -21,7 +25,8 @@ class map_func:
     #たどってきた経路の長さを計算
     def cal_distance(path):
         return len(path)
-    
+
+
     '''
     def write_map(self,file_name):
         device = random_setup.random_set.rand_map(1,5) #今度ランダムじゃないものに置き換える？
