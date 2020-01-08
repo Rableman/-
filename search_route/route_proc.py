@@ -15,6 +15,8 @@ class route_data:
         self.OL = list() #OLはリストを用いて実装
         self.OL_can = list() #next()内での候補の格納に使用
         self.Start = start #Start位置はあらかじめタプル型で用意
+        self.Goal = (0,0)
+        self.Next_Start = (0,0)
         self.flag = 0 #フラグが0のときはゴールが割り振られていない 1のときはゴールが割り振られている
         self.Passed_list = [start] #探索した座標リスト(このリストが最終的に経路となる)
 
@@ -36,7 +38,7 @@ class route_data:
         return
 
     #heapq(優先度キュー)を使ってA*アルゴリズムを実装し、経路探索を行う
-    def search_route(self,file_name,object_name,var_name):
+    def search_route(self,object_name,var_name):
         #初期スコアを計算
         start_score = map_proc.map_func.cal_distance(self.Passed_list) + map_proc.map_func.cal_heuristic(self.Start,self.Goal)
         #探索済み座標とその座標にたどり着いた経路のスコアを格納
