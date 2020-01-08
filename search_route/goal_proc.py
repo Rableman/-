@@ -13,7 +13,7 @@ class goal_func:
                 dev_num = i
         object_name[dev_num].Goal = (x,y)
         object_name[dev_num].flag = 1
-        #print(min_dev_num,dev_num,object_name[dev_num].Goal) #デバッグ
+        object_name[dev_num].Next_Start = (x,y)
 
     def search_goal(goal_field,object_name,dev_sum):
         #外の枠から順番にゴール地点がないかを確認していく
