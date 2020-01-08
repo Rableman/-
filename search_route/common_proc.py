@@ -11,3 +11,6 @@ class common_data:
     
     def ret_goal_field(self):
         return self.Goal_field
+        
+    def set_start(object_name):
+        object_name.Start = object_name.Next_Start
