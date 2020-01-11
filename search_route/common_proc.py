@@ -2,9 +2,11 @@
 import map_proc
 
 class common_data:
-    def __init__(self,device_num):
-        self.Device_sum = device_num
-        self.Goal_field = list()
+    def __init__(self,device_num,h,w):
+        self.Device_sum = device_num #デバイスの総数
+        self.Goal_field = list() #ゴールのフィールド
+        self.H = h #H*Wのフィールド
+        self.W = w
     
     def ret_dev_sum(self):
         return self.Device_sum
@@ -21,5 +23,11 @@ class common_data:
         for i in range(0,15):
             step_name = 'step_' + str(i) + '.txt'
             map_proc.map_func.write_map(step_name,field)
-            
-
+    
+    def init_flag(self,object_name):
+        object_name.flag = 0
+    
+    def init_goal(self):
+        goal_num = input("please input number : ")
+        goal_name = 'goal_' + goal_num + '.txt'
+        map_proc.map_func.load_map(goal_name,self.Goal_field)
