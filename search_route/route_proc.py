@@ -15,8 +15,8 @@ class route_data:
         self.OL = list() #OLはリストを用いて実装
         self.OL_can = list() #next()内での候補の格納に使用
         self.Start = start #Start位置はあらかじめタプル型で用意
-        self.Goal = (0,0)
-        self.Next_Start = (0,0)
+        self.Goal = (0,0) #Goal位置はタプル型で用意
+        self.Next_Start = (0,0) #次のスタート地点を保存しておく
         self.flag = 0 #フラグが0のときはゴールが割り振られていない 1のときはゴールが割り振られている
         self.Passed_list = [start] #探索した座標リスト(このリストが最終的に経路となる)
 
@@ -84,6 +84,7 @@ class route_data:
 
     #探索したルートを表示
     def show_route(self):
-        print(self.Passed_list)
+        #print(self.Passed_list)
         for i in self.Route_Field:
             print(*i)
+        print('')
