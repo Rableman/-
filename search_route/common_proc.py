@@ -18,7 +18,7 @@ class common_data:
     def init_step(self):
         field = list()
         field = map_proc.map_func.load_map('field.txt',field)
-        for i in range(0,10):
+        for i in range(0,15):
             step_name = 'step_' + str(i) + '.txt'
             map_proc.map_func.write_map(step_name,field)
             
