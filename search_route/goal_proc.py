@@ -7,10 +7,13 @@ class goal_func:
         #一番ゴール(x,y)からの距離が近いデバイスを選定してそのデバイスのゴールとフラグを書き換える
         min_dev_num = 100
         for i in range(dev_sum):
-            dis = map_proc.map_func.cal_heuristic(object_name[i].Start,(x,y)) #それぞれのデバイスのスタート位置に第一引数を書き換える
+            #それぞれのデバイスのスタート位置からゴールまでの距離を計算
+            dis = map_proc.map_func.cal_heuristic(object_name[i].Start,(x,y))
+            #計算したデバイスの距離が最小だった場合、デバイスの番号を記録
             if dis < min_dev_num and object_name[i].flag == 0 :
                 min_dev_num = dis
                 dev_num = i
+        #距離が一番近いデバイスのゴール、フラグ、次のスタート位置を記録
         object_name[dev_num].Goal = (x,y)
         object_name[dev_num].flag = 1
         object_name[dev_num].Next_Start = (x,y)
