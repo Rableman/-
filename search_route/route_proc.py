@@ -53,7 +53,6 @@ class route_data:
             self.CL[x[1]][x[0]] = 1
             #Goalについた時の判定
             if(x == self.Goal):
-                print(self.Passed_list)
                 break
             #4方向について探索
             object_name.next(x)
@@ -85,5 +84,6 @@ class route_data:
 
     #探索したルートを表示
     def show_route(self):
+        print(self.Passed_list)
         for i in self.Route_Field:
             print(*i)
