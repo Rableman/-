@@ -37,12 +37,51 @@ class map_func:
         return len(path)
     
     def write_step(object_name):
-        for i in range(0,len(object_name.Passed_list)):
+        #step_0.txtのデータをfieldに格納する
+        field = list()
+        step_name = 'step_0.txt'
+        field = map_func.load_map(step_name,field)
+        #初期位置を取り出す
+        x,y = object_name.Passed_list[0]
+        #フィールドの初期位置を1で埋める
+        field[x][y] = 1
+        #更新したマップを書き込む
+        file_name = 'step_0.txt'
+        map_func.write_map(file_name,field)
+        
+        #初期位置以降の処理(ゴールの一個前まで)
+        step_count = 1
+        while len(object_name.Passed_list) > 1:
+            #step_n.txtのデータをfieldに格納する
             field = list()
-            x,y = object_name.Passed_list[0]
-            step_name = 'step_' + str(i) + '.txt'
+            step_name = 'step_' + str(step_count) + '.txt'
             field = map_func.load_map(step_name,field)
-            field[x][y] = 1
-            object_name.Passed_list.pop(0)
-            file_name = 'step_' + str(i) + '.txt'
+            #次の位置を取り出す
+            x,y = object_name.Passed_list[1]
+            #次に進む位置が0ならそのまま進む
+            #1なら進まない
+            if (field[x][y] == 0):
+                field[x][y] = 1                
+                object_name.Passed_list.pop(0)
+            else :
+                x,y = object_name.Passed_list[0]
+                field[x][y] = 1
+                #表示するマップの変更の処理を行う
+                object_name.Route_Field[x][y] += 1
+            #更新したマップを書き込む
+            file_name = 'step_' + str(step_count) + '.txt'
             map_func.write_map(file_name,field)
+            step_count += 1
+        
+        #ゴールにたどり着いたときの処理
+        #step_n.txtのデータをfieldに格納する
+        field = list()
+        step_name = 'step_' +str(step_count) + '.txt'
+        field = map_func.load_map(step_name,field)
+        #ゴール位置を取り出す
+        x,y = object_name.Passed_list[0]
+        #フィールドのゴール位置を1で埋める
+        field[x][y] = 1
+        #更新したマップを書き込む
+        file_name = 'step_' + str(step_count) + '.txt'
+        map_func.write_map(file_name,field)
