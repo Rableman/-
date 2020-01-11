@@ -7,18 +7,25 @@ import numpy as np
 
 class route_data:
     def __init__(self,h,w,start):
-        self.H = h #縦幅H*横幅Wのグリッド
-        self.W = w
         self.field = list() #グリッド上の情報を格納 自分以外のゴールと壁を1とする
-        self.Route_Field = np.zeros((self.H,self.W),dtype=int) #最終経路の表示に使用
-        self.CL = np.zeros((self.H,self.W), dtype=int) #CLは2次元配列で用意
+        self.Route_Field = np.zeros((h,w),dtype=int) #最終経路の表示に使用
+        self.CL = np.zeros((h,w), dtype=int) #CLは2次元配列で用意
         self.OL = list() #OLはリストを用いて実装
         self.OL_can = list() #next()内での候補の格納に使用
         self.Start = start #Start位置はあらかじめタプル型で用意
         self.Goal = (0,0) #Goal位置はタプル型で用意
         self.Next_Start = (0,0) #次のスタート地点を保存しておく
         self.flag = 0 #フラグが0のときはゴールが割り振られていない 1のときはゴールが割り振られている
-        self.Passed_list = [start] #探索した座標リスト(このリストが最終的に経路となる)
+        self.Passed_list = [self.Start] #探索した座標リスト(このリストが最終的に経路となる)
+    
+    def init_data(self,h,w):
+        self.flag = 0
+        self.Route_Field = np.zeros((h,w),dtype=int)
+        self.CL = np.zeros((h,w), dtype=int)
+        self.OL = list()
+        self.OL_can = list()
+        self.Start = self.Next_Start
+        self.Passed_list = [self.Start] #探索した座標リスト(このリストが最終的に経路となる)
 
     #x座標の上下左右のうち進める部分を探索する
     def next(self,x):
