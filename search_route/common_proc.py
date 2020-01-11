@@ -12,5 +12,14 @@ class common_data:
     def ret_goal_field(self):
         return self.Goal_field
         
-    def set_start(object_name):
+    def set_start(self,object_name):
         object_name.Start = object_name.Next_Start
+    
+    def init_step(self):
+        field = list()
+        field = map_proc.map_func.load_map('field.txt',field)
+        for i in range(0,10):
+            step_name = 'step_' + str(i) + '.txt'
+            map_proc.map_func.write_map(step_name,field)
+            
+
