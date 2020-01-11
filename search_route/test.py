@@ -12,6 +12,9 @@ Device1 = route_proc.route_data(7,7,(4,1))
 Device_info = [Device1]
 goal_proc.goal_func.search_goal(Common_data.ret_goal_field(),Device_info,Common_data.ret_dev_sum())
 
+#ループ分の外でstep_n.txtを初期化する
+Common_data.init_step()
+
 for i in range (Common_data.ret_dev_sum()):
     #ゴールのフィールドを設定
     Device_info[i].field = Common_data.Goal_field
@@ -21,9 +24,9 @@ for i in range (Common_data.ret_dev_sum()):
     Device_info[i].search_route(Device_info[i],Device_info[i].field)
     #通る道を1で埋める
     Device_info[i].update_route()
-    #デバックように表示
-    Device_info[i].show_route()
     #初期位置をゴールに初期化
-    common_proc.common_data.set_start(Device_info[i])
+    Common_data.set_start(Device_info[i])
     #ステップに書き込み
     map_proc.map_func.write_step(Device_info[i])
+    #ルートを表示
+    Device_info[i].show_route()
