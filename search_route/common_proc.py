@@ -30,4 +30,5 @@ class common_data:
     def init_goal(self):
         goal_num = input("please input number : ")
         goal_name = 'goal_' + goal_num + '.txt'
+        self.Goal_field = list()
         map_proc.map_func.load_map(goal_name,self.Goal_field)
