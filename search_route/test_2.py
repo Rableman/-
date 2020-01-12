@@ -5,9 +5,9 @@ import map_proc
 import goal_proc
 import common_proc
 
-this_device = 1
+device_num = 1
 
-#デバイスの総数を設定
+#デバイスの総数、フィールドの座標数を設定
 Common_data = common_proc.common_data(2,7,7)
 #それぞれのデバイスを初期化
 Device1 = route_proc.route_data(Common_data.H,Common_data.W,(3,4))
@@ -33,7 +33,7 @@ while (1):
         Device_info[i].update_route()
         #ステップに書き込み
         map_proc.map_func.write_step(Device_info[i])
-        if (i == this_device-1):
+        if (i == device_num-1):
             #ルートを表示
             Device_info[i].show_route()
         #初期化
