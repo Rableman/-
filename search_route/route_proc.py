@@ -25,7 +25,7 @@ class route_data:
         self.OL = list()
         self.OL_can = list()
         self.Start = self.Next_Start
-        self.Passed_list = [self.Start] #探索した座標リスト(このリストが最終的に経路となる)
+        self.Passed_list = [self.Start]
 
     #x座標の上下左右のうち進める部分を探索する
     def next(self,x):
