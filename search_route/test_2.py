@@ -15,7 +15,7 @@ Device2 = route_proc.route_data(Common_data.H,Common_data.W,(3,3))
 #Device_infoというリストにすべてのデバイスのオブジェクトを入れる
 Device_info = [Device1,Device2]
 
-while (int(input('please input 0(end) or 1(continue) : '))):
+while (1):
     #ゴールのマップを指定
     Common_data.init_goal()
     #それぞれのデバイスのゴールを設定する
