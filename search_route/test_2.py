@@ -20,7 +20,6 @@ while (int(input('please input 0(end) or 1(continue) : '))):
     goal_proc.goal_func.search_goal(Common_data.ret_goal_field(),Device_info,Common_data.ret_dev_sum())
     #ループの外でstep_n.txtを初期化する
     Common_data.init_step()
-
     for i in range (Common_data.ret_dev_sum()):
         #ゴールのフィールドを設定
         Device_info[i].field = Common_data.Goal_field
@@ -30,13 +29,9 @@ while (int(input('please input 0(end) or 1(continue) : '))):
         Device_info[i].search_route(Device_info[i],Device_info[i].field)
         #通る道を1で埋める
         Device_info[i].update_route()
-        
-        print(Device_info[i].Start)
-        print(Device_info[i].Goal)
-
         #ステップに書き込み
         map_proc.map_func.write_step(Device_info[i])
         #ルートを表示
         Device_info[i].show_route()
-        #flagを初期化
+        #初期化
         Device_info[i].init_data(Common_data.H,Common_data.W)
