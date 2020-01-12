@@ -29,12 +29,16 @@ class common_data:
             step_name = 'step_' + str(i) + '.txt'
             map_proc.map_func.write_map(step_name,field)
     
-    #ゴールの位置を変更する
-    def init_goal(self):
+    #ゴールのマップを選ぶ(デバッグ用)
+    def select_goal():
         #ユーザの入力でゴールのフィールドを選択する(ランダムなどに変更可能)
         goal_num = input()
         goal_name = 'goal_' + goal_num + '.txt'
+        return goal_name
+    
+    #ゴールの位置を変更する
+    def init_goal(self,goal_map):
         #ゴールのフィールドを初期化
         self.Goal_field = list()
-        #ゴールのフィールドを読み込む
-        map_proc.map_func.load_map(goal_name,self.Goal_field)
+        #ゴールのフィールドを変更
+        self.Goal_field = goal_map
