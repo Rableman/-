@@ -1,10 +1,12 @@
 #coding utf-8
 
 class map_func:
-    #迷路の情報をfield_nameにリストで格納
+
+    #テキストから迷路の情報をリストとして読み込む
     def load_map(file_name,field_name):
         f = open(file_name,'r')
         for row in f:
+            #改行文字を削除
             row_re = row.replace('\n', '')
             row_new = list()
             #文字から数値に変換
@@ -14,15 +16,19 @@ class map_func:
         f.close()
         return field_name
 
+    #リストの情報をファイルに書き込む
     def write_map(file_name,field_name):
         write_field = list()
         for row in field_name:
+            #ファイル書き込み用にリストを変換
             row_new = str(row).replace(',','').replace('[','').replace(']','').replace(' ','')
             write_field.append(row_new)
+        #1行ごとに改行文字を入れてファイルに書き込む
         f = open(file_name,'w')
         f.write('\n'.join(write_field))
         f.close()
 
+    #全てのゴール地点が1で埋められているので、自分のゴール地点は0に置き換える
     def del_my_goal(object_name):
         x,y = object_name.Goal
         object_name.field[x][y] = 0
