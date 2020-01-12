@@ -1,7 +1,6 @@
 #coding utf-8
 
 class map_func:
-
     #テキストから迷路の情報をリストとして読み込む
     def load_map(file_name,field_name):
         f = open(file_name,'r')
