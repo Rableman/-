@@ -31,8 +31,8 @@ class common_data:
     
     #ゴールの位置を変更する
     def init_goal(self):
-        #ユーザの入力でゴールのフィールドを選択する
-        goal_num = input("please input number : ")
+        #ユーザの入力でゴールのフィールドを選択する(ランダムなどに変更可能)
+        goal_num = input()
         goal_name = 'goal_' + goal_num + '.txt'
         #ゴールのフィールドを初期化
         self.Goal_field = list()
