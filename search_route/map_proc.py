@@ -6,10 +6,10 @@ class map_func:
         f = open(file_name,'r')
         for row in f:
             #改行文字を削除
-            row_re = row.replace('\n', '')
+            row = row.replace('\n', '')
             row_new = list()
             #文字から数値に変換
-            for i in row_re:
+            for i in row:
                 row_new.append(int(i))
             field_name.append(list(row_new))
         f.close()
@@ -20,8 +20,8 @@ class map_func:
         write_field = list()
         for row in field_name:
             #ファイル書き込み用にリストを変換
-            row_new = str(row).replace(',','').replace('[','').replace(']','').replace(' ','')
-            write_field.append(row_new)
+            row = str(row).replace(',','').replace('[','').replace(']','').replace(' ','')
+            write_field.append(row)
         #1行ごとに改行文字を入れてファイルに書き込む
         f = open(file_name,'w')
         f.write('\n'.join(write_field))
