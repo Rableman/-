@@ -8,7 +8,7 @@ if __name__=="__main__":"
     search =  Route_main()
     map = []
     x, y = 0, 0
-    serverip = ""
+    serverip = "172.31.150.3"
     
     def motion(x, y, route):
         while True:
@@ -35,7 +35,7 @@ if __name__=="__main__":"
         else:
             x, y = loc.getcoord()
             data = commu.communication("tcp", serverip, 50007).client(str(x) + "," + str(y))
-            route =search.seachr(x1, y1, x2, y2, x3, y3, map, dev_num)
-            
+            route =search.seachr(dev_num, (x1, y1), (x2, y2), (x3, y3), map)
+
             motion(x, y, route)
 

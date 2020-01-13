@@ -1,4 +1,5 @@
 import socket
+import select
 
 class communication():
 	def __init__(self, mode, ip, port):
