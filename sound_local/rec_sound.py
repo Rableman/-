@@ -113,7 +113,7 @@ class Record:
             for i in range(num):
                 data.append(self.record(freq, rec_sec))
             input("Press enter to go next")
-        
+        self.end_rec()
         #計測データをもとに関数生成
         param, cov = curve_fit(log_func, x, data)
         y = log_func(x, param[0], param[1])
