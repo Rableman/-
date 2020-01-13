@@ -89,7 +89,7 @@ class Record:
             plt.show()
             print("%2.2f[dB]" % self.get_db(maxamp))
         
-        self.end_rec()
+        #self.end_rec()
         return maxamp
 
     #デシベル計算
