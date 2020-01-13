@@ -88,7 +88,8 @@ class Record:
             plt.plot(self.axis[maxid], self.fft_data[maxid], "ro")
             plt.show()
             print("%2.2f[dB]" % self.get_db(maxamp))
-
+        
+        self.end_rec()
         return maxamp
 
     #デシベル計算
@@ -119,7 +120,8 @@ class Record:
         plt.plot(x, y)
         plt.plot(x, data, "ro")
         plt.show()
-        return param # y = a * log(x) + b の[a,b]を返す
+        f = open("func.txt", "a")
+        f.writelines(str(param)+"\n") # y = a * log(x) + b の[a,b]を返す
 
     #録音終了処理
     def end_rec(self):
