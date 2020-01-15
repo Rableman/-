@@ -1,6 +1,6 @@
 #coding utf-8
 
-from search_route import copy
+import copy
 
 class map_func:
     #テキストから迷路の情報をリストとして読み込む
