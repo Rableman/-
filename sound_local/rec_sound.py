@@ -58,7 +58,7 @@ class Record:
         return data
     
     #周波数と録音時間を指定
-    def record(self, freq, record_seconds, debug = True):
+    def record(self, freq, record_seconds, debug = False):
         #print("recstart", freq)
         self.data=np.zeros(self.CHUNK)
 
@@ -89,7 +89,6 @@ class Record:
             plt.show()
             print("%2.2f[dB]" % self.get_db(maxamp))
         
-        #self.end_rec()
         return maxamp
 
     #デシベル計算
@@ -124,7 +123,7 @@ class Record:
         plt.show()
         filename = input("Choose filename: ")
         f = open(filename, "a")
-        f.writelines(str(freq) + ',' + str(param[0]) + ',' + str(param[1]+"\r"))  # y = a * log(x) + b の[a,b]を返す
+        f.writelines(str(freq) + ',' + str(param[0]) + ',' + str(param[1])+"\r")  # y = a * log(x) + b の[a,b]を返す
 
     #録音終了処理
     def end_rec(self):

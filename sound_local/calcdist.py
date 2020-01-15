@@ -3,12 +3,13 @@ import math
 import rec_sound
 
 def readfunc(filename):
-  f = open("func.txt", "r")
+  f = open(filename, "r")
   data = f.readlines()
   func1 = data[0].split(",")
-  func2 = data[0].split(",")
-  func1[0], func2[0] = int(func1[0]),int(func2[0]) 
-  for i in range(2):
+  func2 = data[1].split(",")
+  func1[0] = int(func1[0])
+  func2[0] = int(func2[0]) 
+  for i in range(1,3):
     func1[i] = float(func1[i])
     func2[i] = float(func2[i])
   f.close()
