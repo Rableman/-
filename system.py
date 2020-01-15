@@ -14,13 +14,14 @@ def motion(start, goal, route):
         dif_y = nexp[1] - nowp[1]
         if abs(nexp[0] - prep[0]) == 2 or abs(nexp[1] - prep[1]) == 2:
             popen.movefor("s")
-        elif (nowp[0] - prep[0] > 0 and nexp[1] - nowp[1] < 0) or (nowp[0] - prep[0] < 0 and nexp[1] - nowp[1] > 0) or
-            (nowp[1] - prep[1] > 0 and nexp[0] - nowp[0] > 0) or
+        elif (nowp[0] - prep[0] > 0 and nexp[1] - nowp[1] < 0) /or 
+            (nowp[0] - prep[0] < 0 and nexp[1] - nowp[1] > 0) /or
+            (nowp[1] - prep[1] > 0 and nexp[0] - nowp[0] > 0) /or
             (nowp[1] - prep[1] < 0 and nexp[0] - nowp[0] < 0):
             popen.movefor("l")
-        elif (nowp[0] - prep[0] > 0 and nexp[1] - nowp[1] > 0) or
-            (nowp[0] - prep[0] < 0 and nexp[1] - nowp[1] < 0) or
-            (nowp[1] - prep[1] > 0 and nexp[0] - nowp[0] < 0) or
+        elif (nowp[0] - prep[0] > 0 and nexp[1] - nowp[1] > 0) /or
+            (nowp[0] - prep[0] < 0 and nexp[1] - nowp[1] < 0) /or
+            (nowp[1] - prep[1] > 0 and nexp[0] - nowp[0] < 0) /or
             (nowp[1] - prep[1] < 0 and nexp[0] - nowp[0] > 0):
             popen.movefor("r")
         prep = nowp
