@@ -5,15 +5,16 @@ import map_proc
 import goal_proc
 import common_proc
 
-device_num = 1
+this_device = 1
 
-#デバイスの総数、フィールドの座標数を設定
-Common_data = common_proc.common_data(2,7,7)
+#デバイスの総数を設定
+Common_data = common_proc.common_data(3,7,7)
 #それぞれのデバイスを初期化
 Device1 = route_proc.route_data(Common_data.H,Common_data.W,(3,4))
 Device2 = route_proc.route_data(Common_data.H,Common_data.W,(3,3))
+Device3 = route_proc.route_data(Common_data.H,Common_data.W,(3,2))
 #Device_infoというリストにすべてのデバイスのオブジェクトを入れる
-Device_info = [Device1,Device2]
+Device_info = [Device1,Device2,Device3]
 
 while (1):
     #ゴールのマップを指定
@@ -33,7 +34,7 @@ while (1):
         Device_info[i].update_route()
         #ステップに書き込み
         map_proc.map_func.write_step(Device_info[i])
-        if (i == device_num-1):
+        if (i == this_device-1):
             #ルートを表示
             Device_info[i].show_route()
         #初期化

@@ -14,18 +14,16 @@ class route_data:
         self.OL_can = list() #next()内での候補の格納に使用
         self.Start = start #Start位置はあらかじめタプル型で用意
         self.Goal = (0,0) #Goal位置はタプル型で用意
-        self.Next_Start = (0,0) #次のスタート地点を保存しておく
         self.flag = 0 #フラグが0のときはゴールが割り振られていない 1のときはゴールが割り振られている
         self.Passed_list = [self.Start] #探索した座標リスト(このリストが最終的に経路となる)
     
+    #初期化の処理
     def init_data(self,h,w):
         self.flag = 0
         self.Route_Field = np.zeros((h,w),dtype=int)
         self.CL = np.zeros((h,w), dtype=int)
         self.OL = list()
         self.OL_can = list()
-        self.Start = self.Next_Start
-        self.Passed_list = [self.Start]
 
     #x座標の上下左右のうち進める部分を探索する
     def next(self,x):
@@ -46,6 +44,8 @@ class route_data:
 
     #heapq(優先度キュー)を使ってA*アルゴリズムを実装し、経路探索を行う
     def search_route(self,object_name,var_name):
+        #初期化
+        self.Passed_list = [self.Start]
         #初期スコアを計算
         start_score = map_proc.map_func.cal_distance(self.Passed_list) + map_proc.map_func.cal_heuristic(self.Start,self.Goal)
         #探索済み座標とその座標にたどり着いた経路のスコアを格納
@@ -81,7 +81,7 @@ class route_data:
             self.OL_can = list()
         #探索失敗時
         if(x!=self.Goal):
-            print("Fault\n")
+            #print("Fault\n")
             sys.exit()
 
     #通る経路を1で埋める
@@ -89,9 +89,17 @@ class route_data:
         for route_i in self.Passed_list:
             self.Route_Field[route_i[0]][route_i[1]] = 1
 
-    #探索したルートを表示
+    #探索したルートを返り値にする
     def show_route(self):
-        #print(self.Passed_list)
+        show_field = list()
+        for row in self.Route_Field:
+            #出力用にリストを変換
+            row = str(row).replace(',','').replace('[','').replace(']','').replace(' ','')
+            show_field.append(row)
+        show_field = '\n'.join(show_field)
+        return show_field
+    
+    def show_route_debug(self):
         for i in self.Route_Field:
             print(*i)
         print('')
