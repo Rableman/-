@@ -31,8 +31,7 @@ class Calcdist:
         self.sourceB = [5, 5]
         self.funcB = [B[1],B[2]]
         #位置座標情報
-        self.grid = self.init_grid()
-    
+        #     
     def get_dist(self, debug =True):
         sec = 2 #録音時間
         dist=[0,0]
@@ -56,7 +55,7 @@ class Calcdist:
     #座標提供
     def get_coord(self):
         dist = self.get_dist()        
-        x, y = self.calc_coord(dist[0], self.cos_rule(dist[0], dist[1], self.sourceB[0] - self.sourceA[0]))
+        x, y = self.calc_coord(dist[0], self.cos_rule((dist[0]/10), (dist[1]/10), self.sourceB[0] - self.sourceA[0]))
         return x, y
 
     #座標算出
