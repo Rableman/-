@@ -102,3 +102,4 @@ class route_data:
     def show_route_debug(self):
         for i in self.Route_Field:
             print(*i)
+        print('')
