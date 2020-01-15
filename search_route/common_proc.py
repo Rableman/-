@@ -1,5 +1,5 @@
 #coding utf-8
-import map_proc
+from search_route import map_proc
 
 class common_func:
     #step_n.txtを初期化する
