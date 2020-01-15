@@ -5,7 +5,7 @@ from search_route import route_main
 from stepper_raspi import popen
 
 def motion(start, goal, route):
-    routeobj = [[y for y in x] for x in route.split("\n")]
+    routeobj = [[int(y) for y in x] for x in route.split("\n")]
     ada = search_adapter.adapter(start,goal,routeobj)
     nowp = start
     prep = [start[0], start[1]]
