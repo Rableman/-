@@ -5,8 +5,8 @@ from stepper_raspi import popen
 
 if __name__=="__main__":
     dev_num = int(input("input device numver: "))
-    loc = Calcdist()
-    search =  Route_main()
+    loc = calcdist.Calcdist()
+    search =  route_main.route_main_func()
     map = []
     x, y = 0, 0
     serverip = "172.31.150.3"
@@ -46,7 +46,12 @@ if __name__=="__main__":
         else:
             x, y = loc.getcoord()
             data = commu.communication("tcp", serverip, 50007).client(str(x) + "," + str(y))
-            Gpoint, route =search.seachr(dev_num, (x1, y1), (x2, y2), (x3, y3), map)
+            x2 = input("x2=")
+            y2 = input("y2=")
+            x3 = input("x3=")
+            y3 = input("y3=")
+
+            Gpoint, route =search.seachr(dev_num, [x, y], [x2, y2], [x3, y3], map)
 
             motion([x, y], Gpoint, route)
 
