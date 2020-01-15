@@ -34,14 +34,14 @@ if __name__=="__main__":
     serverip = "172.31.150.2"
 
     while(1):
-        data = commu.communication("tcp", serverip, 50007).client("1")
+        data = commu.communication("tcp", serverip, 50007).client(dev_num)
         map = data["data"]
         route = []
         if map == []:
             continue
         else:
             x, y = loc.getcoord()
-            data = commu.communication("tcp", serverip, 50007).client(str(x) + "," + str(y))
+            data = commu.communication("boradcast", serverip, 50007).client(str(x) + "," + str(y))
             x2 = input("x2=")
             y2 = input("y2=")
             x3 = input("x3=")
