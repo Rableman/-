@@ -32,15 +32,13 @@ class Calcdist:
         self.funcB = [B[1],B[2]]
         #位置座標情報
         #     
-    def get_dist(self, debug =True):
+    def get_dist(self):
         sec = 2 #録音時間
         dist=[0,0]
         source=["A","B"]
         dist[0]= self.calc_dist(self.rec.record(self.freqA,sec), self.freqA)
         dist[1] = self.calc_dist(self.rec.record(self.freqB,sec), self.freqB)
-        if debug == True: 
-            for i in range(2):
-                print("Dist_%s: %d[cm]" % source[i], dist[i])
+
         return dist
 
     #音の振幅を元に距離を計算 
