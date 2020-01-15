@@ -7,10 +7,11 @@ from stepper_raspi import popen
 def motion(start, goal, route):
     routeobj = [[int(y) for y in x] for x in route.split("\n")]
     ada = search_adapter.adapter(start,goal,routeobj)
-    nowp = start
-    prep = [start[0], start[1]]
-    nexp = nowp
+    nowp = [0, 0]
+    prep = [0, 0]
+    nexp = start
     while nexp != goal:
+        nexp = ada.next()
         dif_x = nexp[0] - nowp[0]
         dif_y = nexp[1] - nowp[1]
         if abs(nexp[0] - prep[0]) == 2 or abs(nexp[1] - prep[1]) == 2:
@@ -20,7 +21,6 @@ def motion(start, goal, route):
         elif (nowp[0] - prep[0] > 0 and nexp[1] - nowp[1] > 0) or (nowp[0] - prep[0] < 0 and nexp[1] - nowp[1] < 0) or (nowp[1] - prep[1] > 0 and nexp[0] - nowp[0] < 0) or (nowp[1] - prep[1] < 0 and nexp[0] - nowp[0] > 0):
             popen.movefor("r")
         prep = nowp
-        nexp = ada.next()
         nowp = nexp
     print("GOAL")
 
