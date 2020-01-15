@@ -1,9 +1,9 @@
 #coding utf-8
 
-import route_proc
-import map_proc
-import goal_proc
-import common_proc
+from search_route import route_proc
+from search_route import map_proc
+from search_route import goal_proc
+from search_route import common_proc
 
 class route_main_func:
     #デバイスの総数、フィールドの座標数を設定
