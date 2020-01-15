@@ -34,14 +34,21 @@ class route_main_func:
             map_proc.map_func.del_my_goal(self.Device_info[i])
             #デバイスのルートを策定する
             self.Device_info[i].search_route(self.Device_info[i],self.Device_info[i].field)
+            #他のデバイスとぶつかった場合にはルートを決め直す
+            while (map_proc.map_func.write_step(self.Device_info[i])):
+                #初期化
+                self.Device_info[i].init_data(self.H,self.W)
+                #ルートを策定する
+                self.Device_info[i].search_route(self.Device_info[i],self.Device_info[i].field)
             #通る道を1で埋める
             self.Device_info[i].update_route()
-            #ステップに書き込み
-            map_proc.map_func.write_step(self.Device_info[i])
             if (i == device_num-1):
-                #ルートを出力
-                print_route = self.Device_info[i].show_route()
+                #返すべきルートを保持
+                return_route = self.Device_info[i].show_route()
+                #返すべきゴールを代入
+                return_goal = self.Device_info[i].Goal
+            #self.Device_info[i].show_route_debug()
             #初期化
             self.Device_info[i].init_data(self.H,self.W)
         #探索したルートを返り値にする
-        return print_route
+        return return_goal,return_route
