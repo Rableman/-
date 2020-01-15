@@ -1,6 +1,6 @@
 import numpy as np
 import math
-import rec_sound
+from sound_local import rec_sound
 
 def readfunc(filename):
   f = open(filename, "r")

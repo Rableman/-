@@ -1,9 +1,9 @@
-from sond_localization import calcdist
+from sound_local import calcdist
 from communication import commu
 from search_route import route_main
-from stepper-raspi import popen
+from stepper_raspi import popen
 
-if __name__=="__main__":"
+if __name__=="__main__":
     dev_num = int(input("input device numver: "))
     loc = Calcdist()
     search =  Route_main()
