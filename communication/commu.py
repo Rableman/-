@@ -14,7 +14,7 @@ class communication():
 		if self.mode == "tcp":
 			with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 				# IPアドレスとポートを指定
-				s.bind((self.ip, self.port))
+				s.bind(("0.0.0.0", self.port))
 				# 1 接続
 				s.listen(clientnum)
 				# connection するまで待つ
