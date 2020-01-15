@@ -25,11 +25,11 @@ class Calcdist:
         #第１音源
         self.freqA = A[0]
         self.sourceA = [0, 5]
-        self.funcA = list(A[1],A[2])
+        self.funcA = [A[1],A[2]]
         #第２音源
         self.freqB = B[0]
         self.sourceB = [5, 5]
-        self.funcB = list(B[1],B[2])
+        self.funcB = [B[1],B[2]]
         #位置座標情報
         self.grid = self.init_grid()
     
