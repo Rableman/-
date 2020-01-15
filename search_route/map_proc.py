@@ -1,5 +1,7 @@
 #coding utf-8
 
+import copy
+
 class map_func:
     #テキストから迷路の情報をリストとして読み込む
     def load_map(file_name,field_name):
@@ -40,53 +42,35 @@ class map_func:
     #たどってきた経路の長さを計算
     def cal_distance(path):
         return len(path)
-    
+
     def write_step(object_name):
-        #step_0.txtのデータをfieldに格納する
-        field = list()
-        step_name = 'step_0.txt'
-        field = map_func.load_map(step_name,field)
-        #初期位置を取り出す
-        x,y = object_name.Passed_list[0]
-        #フィールドの初期位置を1で埋める
-        field[x][y] = 1
-        #更新したマップを書き込む
-        file_name = 'step_0.txt'
-        map_func.write_map(file_name,field)
-        
         #初期位置以降の処理(ゴールの一個前まで)
         step_count = 1
-        while len(object_name.Passed_list) > 1:
+        all_step = list() #全てのstepの情報を一時的に保持
+        tmp_passed_list = copy.deepcopy(object_name.Passed_list)
+        while len(tmp_passed_list) > 1:
             #step_n.txtのデータをfieldに格納する
             field = list()
             step_name = 'step_' + str(step_count) + '.txt'
             field = map_func.load_map(step_name,field)
             #次の位置を取り出す
-            x,y = object_name.Passed_list[1]
+            x,y = tmp_passed_list[1]
             #次に進む位置が0ならそのまま進む
-            #1なら進まない
+            #1なら進まない ← 改善必要
             if (field[x][y] == 0):
-                field[x][y] = 1                
-                object_name.Passed_list.pop(0)
-            else :
-                x,y = object_name.Passed_list[0]
                 field[x][y] = 1
-                #表示するマップの変更の処理を行う
-                object_name.Route_Field[x][y] += 1
-            #更新したマップを書き込む
-            file_name = 'step_' + str(step_count) + '.txt'
-            map_func.write_map(file_name,field)
+                tmp_passed_list.pop(0)
+            else :
+                #進むとぶつかる部分を通らないように、fieldを更新
+                object_name.field[x][y] = 1
+                return 1
+            all_step.append(field)
             step_count += 1
-        
-        #ゴールにたどり着いたときの処理
-        #step_n.txtのデータをfieldに格納する
-        field = list()
-        step_name = 'step_' +str(step_count) + '.txt'
-        field = map_func.load_map(step_name,field)
-        #ゴール位置を取り出す
-        x,y = object_name.Passed_list[0]
-        #フィールドのゴール位置を1で埋める
-        field[x][y] = 1
-        #更新したマップを書き込む
-        file_name = 'step_' + str(step_count) + '.txt'
-        map_func.write_map(file_name,field)
+        #ステップは最終的に書き込むようにする
+        for i in range(step_count-1):
+            #更新したマップを書き込む
+            file_name = 'step_' + str(i+1) + '.txt'
+            map_func.write_map(file_name,all_step[i])
+        #ゴールにたどり着いたときの処理は必要ない
+        #そもそもゴールは通らないようにしているため、step_n.txtで確認する必要なし
+        return 0
