@@ -2,23 +2,33 @@ import numpy as np
 import math
 import rec_sound
 
+def readfunc(filename):
+  f = open("func.txt", "r")
+  data = f.readlines()
+  func1 = data[0].split(",")
+  func2 = data[0].split(",")
+  func1[0], func2[0] = int(func1[0]),int(func2[0]) 
+  for i in range(2):
+    func1[i] = float(func1[i])
+    func2[i] = float(func2[i])
+  f.close()
+  return func1, func2
+
 class Calcdist: 
 
     def __init__(self):
 
         self.rec = rec_sound.Record()
-        #f = open("func.txt", "r")
-        #func_data = f.readlines()
-        #音源周波数
+        A, B = readfunc("func.txt")
+        #音源周波数        
         #第１音源
-        self.freqA = 18400
+        self.freqA = A[0]
         self.sourceA = [0, 5]
-        #self.funcA = func_data[0]
+        self.funcA = list(A[1],A[2])
         #第２音源
-        self.freqB = 18700
+        self.freqB = B[0]
         self.sourceB = [5, 5]
-        #self.funcB = func_data[1]
-        f.close()
+        self.funcB = list(B[1],B[2])
         #位置座標情報
         self.grid = self.init_grid()
     

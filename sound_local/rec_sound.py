@@ -99,7 +99,7 @@ class Record:
     #関数生成
     def get_func(self):
         #データ
-        x = [10,20,30,40,50,60,70]
+        x = [10,20,30,40,50]
         data = []
         
         #録音設定
@@ -108,20 +108,22 @@ class Record:
         num = int(input("how many times? : "))
         
         #10~70cm毎にnum回録音して振幅データ生成
-        for i in range(7):
+        for i in range(len(x)):
             print("measuring %d cm" % ((i+1)*10))
             for i in range(num):
-                data.append(self.record(freq, rec_sec))
+                ave.append(self.record(freq, rec_sec))
+            data.append(sum(ave)/len(ave))
             input("Press enter to go next")
-        self.end_rec()
+
         #計測データをもとに関数生成
         param, cov = curve_fit(log_func, x, data)
         y = log_func(x, param[0], param[1])
         plt.plot(x, y)
         plt.plot(x, data, "ro")
         plt.show()
-        f = open("func.txt", "a")
-        f.writelines(str(param)+"\n") # y = a * log(x) + b の[a,b]を返す
+        filename = input("Choose filename: ")
+        f = open(filename, "a")
+        f.writelines(str(freq) + ',' + str(param[0]) + ',' + str(param[1]+"\r"))  # y = a * log(x) + b の[a,b]を返す
 
     #録音終了処理
     def end_rec(self):
@@ -132,7 +134,5 @@ class Record:
 if __name__=="__main__":
     plotwin=Record()
     plotwin.get_func()
-    #fd = open("Freqdata.csv", "a+")
-    #fd.close()
     
     plotwin.end_rec()
