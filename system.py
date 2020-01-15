@@ -41,13 +41,14 @@ if __name__=="__main__":
             continue
         else:
             x, y = loc.getcoord()
+            print(x,y)
             data = commu.communication("boradcast", serverip, 50007).client(str(x) + "," + str(y))
             x2 = input("x2=")
             y2 = input("y2=")
             x3 = input("x3=")
             y3 = input("y3=")
 
-            Gpoint, route =search.seachr(dev_num, [x, y], [x2, y2], [x3, y3], map)
-
+            Gpoint, route =route_main.main(dev_num, [x, y], [x2, y2], [x3, y3], map)
+            print(Gpoit, route)
             motion([x, y], Gpoint, route)
 
