@@ -101,13 +101,14 @@ class Record:
         #データ
         x = [10,20,30,40,50]
         data = []
+        ave = []
         
         #録音設定
         freq = int(input("input freq: "))
         rec_sec = int(input("input recsec: "))
         num = int(input("how many times? : "))
         
-        #10~70cm毎にnum回録音して振幅データ生成
+        #10~50cm毎にnum回録音して振幅データ生成
         for i in range(len(x)):
             print("measuring %d cm" % ((i+1)*10))
             for i in range(num):
