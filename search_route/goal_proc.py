@@ -1,6 +1,6 @@
 #coding utf-8
 
-import map_proc
+from search_route import map_proc
 
 class goal_func:
     def set_device(x,y,object_name,dev_sum):
