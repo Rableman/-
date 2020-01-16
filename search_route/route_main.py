@@ -1,9 +1,9 @@
 #coding utf-8
 
-import route_proc
-import map_proc
-import goal_proc
-import common_proc
+from search_route import route_proc
+from search_route import map_proc
+from search_route import goal_proc
+from search_route import common_proc
 import copy
 
 class route_main_func:
@@ -22,6 +22,14 @@ class route_main_func:
     #デバイスが何番目なのかというローカル変数と3つのデバイスのスタート地点、ゴールのマップを引数
     # → 経路を返す
     def main(self,device_num,Device1_start,Device2_start,Device3_start,goal_map):
+        goal = goal_map.split('\n')
+        goal_map = []
+        for row in goal:
+            row_new = list()
+            for i in row:
+                row_new.append(int(i))
+            goal_map.append(list(row_new))
+        
         #それぞれのデバイスのスタート地点を更新
         common_proc.common_func.set_start(Device1_start,Device2_start,Device3_start,self.Device_info)
         #それぞれのデバイスのゴールを設定する
@@ -50,8 +58,10 @@ class route_main_func:
                 #返すべきゴールを代入
                 return_goal = [self.Device_info[i].Goal[0],self.Device_info[i].Goal[1]]
             #デバッグ
-            #self.Device_info[i].show_route_debug()
+            self.Device_info[i].show_route_debug()
             #初期化
             self.Device_info[i].init_data(self.H,self.W)
+        #step_n.txtを削除
+        common_proc.common_func.del_step()
         #探索したルートを返り値にする
         return return_goal,return_route
