@@ -27,6 +27,7 @@ class route_data:
 
     #x座標の上下左右のうち進める部分を探索する
     def next(self,x):
+        '''
         #行名がy軸 列名がx軸に対応しているため、(x[1],x[0])の座標となる
         #上に進めるか判定
         if(self.field[x[1]-1][x[0]]==0 and self.CL[x[1]-1][x[0]]==0):
@@ -40,6 +41,20 @@ class route_data:
         #左に進めるか判定
         if(self.field[x[1]][x[0]-1]==0 and self.CL[x[1]][x[0]-1]==0):
             self.OL_can.append((x[0]-1,x[1]))
+        return
+        '''
+        #上に進めるか判定
+        if(self.field[x[0]-1][x[1]]==0 and self.CL[x[0]-1][x[1]]==0):
+            self.OL_can.append((x[0]-1,x[1]))
+        #下に進めるか判定
+        if(self.field[x[0]+1][x[1]]==0 and self.CL[x[0]+1][x[1]]==0):
+            self.OL_can.append((x[0]+1,x[1]))
+        #右に進めるか判定
+        if(self.field[x[0]][x[1]+1]==0 and self.CL[x[0]][x[1]+1]==0):
+            self.OL_can.append((x[0],x[1]+1))
+        #左に進めるか判定
+        if(self.field[x[0]][x[1]-1]==0 and self.CL[x[0]][x[1]-1]==0):
+            self.OL_can.append((x[0],x[1]-1))
         return
 
     #heapq(優先度キュー)を使ってA*アルゴリズムを実装し、経路探索を行う
@@ -100,6 +115,7 @@ class route_data:
         return show_field
     
     def show_route_debug(self):
+        print(self.Passed_list)
         for i in self.Route_Field:
             print(*i)
         print('')
