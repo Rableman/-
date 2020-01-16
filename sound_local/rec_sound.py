@@ -8,7 +8,7 @@ import csv
 
 #対数関数
 def log_func(x, a, b):
-    return a * np.log(x) + b
+    return a * (math.e**x) + b
 
 #リストの中身を定数で割る関数
 def div_list(lists, num):
@@ -98,7 +98,7 @@ class Record:
     #関数生成
     def get_func(self):
         #データ
-        x = [10,20,30,40,50]
+        x = np.array([10,20,30,40,50])
         data = []
         ave = []
         
