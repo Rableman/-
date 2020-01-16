@@ -38,7 +38,7 @@ class Calcdist:
         source=["A","B"]
         dist[0]= self.calc_dist(self.rec.record(self.freqA,sec), self.freqA)
         dist[1] = self.calc_dist(self.rec.record(self.freqB,sec), self.freqB)
-
+        print(dist)
         return dist
 
     #音の振幅を元に距離を計算 

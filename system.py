@@ -27,28 +27,32 @@ def motion(start, goal, route):
 
 if __name__=="__main__":
     dev_num = int(input("input device number: "))
-    loc = calcdist.Calcdist()
+    #loc = calcdist.Calcdist()
     search =  route_main.route_main_func()
     map = []
     x, y = 0, 0
     serverip = "172.31.150.2"
 
     while(1):
-        data = commu.communication("tcp", serverip, 50007).client(dev_num)
+        data = commu.communication("tcp", serverip, 50007).client(str(dev_num))
         map = data["data"]
+        print(map)
         route = []
         if map == []:
             continue
         else:
-            x, y = loc.getcoord()
+            #x, y = loc.get_coord()
+            x = 1
+            y = 1
             print(x,y)
-            data = commu.communication("boradcast", serverip, 50007).client(str(x) + "," + str(y))
-            x2 = input("x2=")
-            y2 = input("y2=")
-            x3 = input("x3=")
-            y3 = input("y3=")
+            #data = commu.communication("boradcast", serverip, 50007).client(str(x) + "," + str(y))
+            print(map)
+            x2 = int(input("x2="))
+            y2 = int(input("y2="))
+            x3 = int(input("x3="))
+            y3 = int(input("y3="))
 
-            Gpoint, route =route_main.main(dev_num, [x, y], [x2, y2], [x3, y3], map)
+            Gpoint, route =search.main(dev_num, (x, y), (x2, y2), (x3, y3), map)
             print(Gpoit, route)
             motion([x, y], Gpoint, route)
 

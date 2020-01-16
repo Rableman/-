@@ -21,6 +21,14 @@ class route_main_func:
     #デバイスが何番目なのかというローカル変数と3つのデバイスのスタート地点、ゴールのマップを引数
     # → 経路を返す
     def main(self,device_num,Device1_start,Device2_start,Device3_start,goal_map):
+        goal = goal_map.split('\n')
+        goal_map = []
+        for row in goal:
+            row_new = list()
+            for i in row:
+                row_new.append(int(i))
+            goal_map.append(list(row_new))
+
         #それぞれのデバイスのスタート地点を更新
         common_proc.common_func.set_start(Device1_start,Device2_start,Device3_start,self.Device_info)
         #それぞれのデバイスのゴールを設定する
