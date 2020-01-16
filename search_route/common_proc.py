@@ -1,5 +1,6 @@
 #coding utf-8
-import map_proc
+from search_route import map_proc
+import os
 
 class common_func:
     #step_n.txtを初期化する
@@ -10,6 +11,12 @@ class common_func:
         for i in range(1,15):
             step_name = 'step_' + str(i) + '.txt'
             map_proc.map_func.write_map(step_name,field)
+    
+    #step_n.txtを削除
+    def del_step():
+        for i in range(1,15):
+            step_name = 'step_' + str(i) + '.txt'
+            os.remove(step_name)
     
     #ゴールのマップを選ぶ(デバッグ用)
     def select_goal():
