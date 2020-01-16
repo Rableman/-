@@ -2,7 +2,7 @@
 import heapq
 import sys
 import random
-import map_proc
+from search_route import map_proc
 import numpy as np
 
 class route_data:
