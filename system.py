@@ -53,6 +53,6 @@ if __name__=="__main__":
             y3 = int(input("y3="))
 
             Gpoint, route =search.main(dev_num, (x, y), (x2, y2), (x3, y3), map)
-            print(Gpoit, route)
+            print(Gpoint, route)
             motion([x, y], Gpoint, route)
 
