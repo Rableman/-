@@ -48,7 +48,7 @@ class route_main_func:
                 #返すべきルートを保持
                 return_route = self.Device_info[i].show_route()
                 #返すべきゴールを代入
-                return_goal = self.Device_info[i].Goal
+                return_goal = [self.Device_info[i].Goal[0],self.Device_info[i].Goal[1]]
             #デバッグ
             #self.Device_info[i].show_route_debug()
             #初期化
