@@ -4,6 +4,7 @@ from search_route import route_proc
 from search_route import map_proc
 from search_route import goal_proc
 from search_route import common_proc
+import copy
 
 class route_main_func:
     #デバイスの総数、フィールドの座標数を設定
@@ -21,15 +22,24 @@ class route_main_func:
     #デバイスが何番目なのかというローカル変数と3つのデバイスのスタート地点、ゴールのマップを引数
     # → 経路を返す
     def main(self,device_num,Device1_start,Device2_start,Device3_start,goal_map):
+        goal = goal_map.split('\n')
+        goal_map = []
+        for row in goal:
+            row_new = list()
+            for i in row:
+                row_new.append(int(i))
+            goal_map.append(list(row_new))
+
         #それぞれのデバイスのスタート地点を更新
         common_proc.common_func.set_start(Device1_start,Device2_start,Device3_start,self.Device_info)
         #それぞれのデバイスのゴールを設定する
         goal_proc.goal_func.search_goal(goal_map,self.Device_info,self.Device_sum)
         #ループの外でstep_n.txtを初期化する
         common_proc.common_func.init_step()
+
         for i in range (self.Device_sum):
             #ゴールのフィールドをフィールドとして設定
-            self.Device_info[i].field = goal_map
+            self.Device_info[i].field = copy.deepcopy(goal_map)
             #自分のデバイスの位置を削除
             map_proc.map_func.del_my_goal(self.Device_info[i])
             #デバイスのルートを策定する
@@ -46,7 +56,8 @@ class route_main_func:
                 #返すべきルートを保持
                 return_route = self.Device_info[i].show_route()
                 #返すべきゴールを代入
-                return_goal = self.Device_info[i].Goal
+                return_goal = [self.Device_info[i].Goal[0],self.Device_info[i].Goal[1]]
+            #デバッグ
             #self.Device_info[i].show_route_debug()
             #初期化
             self.Device_info[i].init_data(self.H,self.W)

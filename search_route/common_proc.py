@@ -5,7 +5,7 @@ class common_func:
     #step_n.txtを初期化する
     def init_step():
         field = list()
-        field = map_proc.map_func.load_map('field.txt',field)
+        field = map_proc.map_func.load_map('search_route/field.txt',field)
         #step0~14.txtをfield.txtと同様にすることで初期化
         for i in range(1,15):
             step_name = 'step_' + str(i) + '.txt'

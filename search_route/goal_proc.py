@@ -16,7 +16,6 @@ class goal_func:
         #距離が一番近いデバイスのゴール、フラグ、次のスタート位置を記録
         object_name[dev_num].Goal = (x,y)
         object_name[dev_num].flag = 1
-        object_name[dev_num].Next_Start = (x,y)
 
     def search_goal(goal_field,object_name,dev_sum):
         #外の枠から順番にゴール地点がないかを確認していく

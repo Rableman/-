@@ -8,14 +8,14 @@ import csv
 
 #対数関数
 def log_func(x, a, b):
-    return a * np.log(x) + b
+    return a * (math.e**x) + b
 
 #リストの中身を定数で割る関数
 def div_list(lists, num):
     if len(lists) == 1:  return lists[0]
     for i in range(len(lists)):
         lists[i] = lists[i]/num
-    return lists   
+    return lists
 
 #フィルター関数
 def filt(data, s_freq, fp, fs, gp, gs, ftype):
@@ -56,7 +56,7 @@ class Record:
         data=np.fft.fft(data)
         data=np.abs(data)
         return data
-    
+
     #周波数と録音時間を指定
     def record(self, freq1, freq2, record_seconds, debug = False):
         if freq1 > freq2:
@@ -101,15 +101,15 @@ class Record:
     #関数生成
     def get_func(self):
         #データ
-        x = [10,20,30,40,50]
+        x = np.array([10,20,30,40,50])
         data = []
         ave = []
-        
+
         #録音設定
         freq = int(input("input freq: "))
         rec_sec = int(input("input recsec: "))
         num = int(input("how many times? : "))
-        
+
         #10~50cm毎にnum回録音して振幅データ生成
         for i in range(len(x)):
             print("measuring %d cm" % ((i+1)*10))
@@ -137,5 +137,5 @@ class Record:
 if __name__=="__main__":
     plotwin=Record()
     plotwin.get_func()
-    
+
     plotwin.end_rec()

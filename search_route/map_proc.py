@@ -49,6 +49,7 @@ class map_func:
         all_step = list() #全てのstepの情報を一時的に保持
         tmp_passed_list = copy.deepcopy(object_name.Passed_list)
         while len(tmp_passed_list) > 1:
+            print(tmp_passed_list)
             #step_n.txtのデータをfieldに格納する
             field = list()
             step_name = 'step_' + str(step_count) + '.txt'
