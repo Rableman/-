@@ -51,4 +51,3 @@ if __name__=="__main__":
             Gpoint, route =route_main.main(dev_num, [x, y], [x2, y2], [x3, y3], map)
             print(Gpoit, route)
             motion([x, y], Gpoint, route)
-

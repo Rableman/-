@@ -36,8 +36,9 @@ class Calcdist:
         sec = 2 #録音時間
         dist=[0,0]
         source=["A","B"]
-        dist[0]= self.calc_dist(self.rec.record(self.freqA,sec), self.freqA)
-        dist[1] = self.calc_dist(self.rec.record(self.freqB,sec), self.freqB)
+        amp = self.rec.record(self.freqA,self.freqB, sec)
+        dist[0]= self.calc_dist(amp[0], self.freqA)
+        dist[1] = self.calc_dist(amp[1], self.freqB)
 
         return dist
 
