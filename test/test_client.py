@@ -1,5 +1,5 @@
 import commu
-data = {"ip":"","data",""}
+data = [{"ip":"","data":""},{"ip":"","data":""}]
 log = [[],[],[]]
 val = ""
 status = 0
