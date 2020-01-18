@@ -15,7 +15,7 @@ def div_list(lists, num):
     if len(lists) == 1:  return lists[0]
     for i in range(len(lists)):
         lists[i] = lists[i]/num
-    return lists   
+    return lists
 
 #フィルター関数
 def filt(data, s_freq, fp, fs, gp, gs, ftype):
@@ -56,7 +56,7 @@ class Record:
         data=np.fft.fft(data)
         data=np.abs(data)
         return data
-    
+
     #周波数と録音時間を指定
     def record(self, freq, record_seconds, debug = False):
         #print("recstart", freq)
@@ -88,7 +88,7 @@ class Record:
             plt.plot(self.axis[maxid], self.fft_data[maxid], "ro")
             plt.show()
             print("%2.2f[dB]" % self.get_db(maxamp))
-        
+
         return maxamp
 
     #デシベル計算
@@ -101,12 +101,12 @@ class Record:
         x = np.array([10,20,30,40,50])
         data = []
         ave = []
-        
+
         #録音設定
         freq = int(input("input freq: "))
         rec_sec = int(input("input recsec: "))
         num = int(input("how many times? : "))
-        
+
         #10~50cm毎にnum回録音して振幅データ生成
         for i in range(len(x)):
             print("measuring %d cm" % ((i+1)*10))
@@ -134,5 +134,5 @@ class Record:
 if __name__=="__main__":
     plotwin=Record()
     plotwin.get_func()
-    
+
     plotwin.end_rec()
