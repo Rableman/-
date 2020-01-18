@@ -9,9 +9,9 @@ y = input("y = ")
 log[0] = [x, y]
 if dev == 1:
     #デバイス１番(11号)は２回サーバモード
-    data[0] = commu.communication("tcp", "0.0.0.0", 500001).server(x + y)
+    data[0] = commu.communication("tcp", "0.0.0.0", 50001).server(x + y)
     log[1] = list(data[0]["data"])
-    data[1] = commu.communication("tcp", "0.0.0.0", 500002).server(x + y)
+    data[1] = commu.communication("tcp", "0.0.0.0", 50002).server(x + y)
     log[2] = list(data[1]["data"])
 elif dev == 2:
     #デバイス２番(10号)は１回クライアント、１回サーバ
