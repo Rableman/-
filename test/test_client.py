@@ -28,3 +28,4 @@ def sync_pos(dev, ip1, ip2):
             data[1] = commu.communication("tcp", ip2, 50003).client(x + y)
         log[2] = list(data[1]["data"])
     #for i in range(3): print(log[i])
+    return log

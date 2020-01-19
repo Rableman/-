@@ -15,7 +15,6 @@ if __name__=="__main__":
     args = sys.argv
     ip1 = args[1]
     ip2 = args[2]
-    ip3 = args[3]
 
     while(1):
         data = commu.communication("tcp", serverip, 50007).client(str(dev_num))
@@ -26,7 +25,7 @@ if __name__=="__main__":
             continue
         else:
             #x, y = loc.get_coord()
-            pos = sync_pos(dev_num)
+            pos = sync_pos(dev_num, ip1, ip2, ip3)
             Gpoint, route = search.main(dev_num, (pos[0][0], pos[0][1]), (pos[1][0], pos[1][1]), (pos[2][0], pos[2][1]), map)
             print(Gpoint, route)
             motion([x, y], Gpoint, route)
