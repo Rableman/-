@@ -27,7 +27,7 @@ for i in range(3):
             data[0] = commu.communication("tcp", "192.168.3.31", 50002).client(x + y)
         log[1] = list(data[0]["data"])
         while data[1]["data"] == "":
-            data[1] = commu.communication("tcp", "192.168.3.16", 50003).client(x + y)
+            data[1] = commu.communication("tcp", "192.168.3.3", 50003).client(x + y)
         log[2] = list(data[1]["data"])
     print(log[0])
     print(log[1])
