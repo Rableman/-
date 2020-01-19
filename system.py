@@ -27,7 +27,7 @@ if __name__=="__main__":
             #x, y = loc.get_coord()
             pos = sync_pos(dev_num, ip1, ip2, ip3)
             Gpoint, route = search.main(dev_num, (pos[0][0], pos[0][1]), (pos[1][0], pos[1][1]), (pos[2][0], pos[2][1]), map)
-            print(Gpoint, route)
+            #print(Gpoint, route)
             motion([x, y], Gpoint, route)
 
 def motion(start, goal, route):
