@@ -46,9 +46,9 @@ class Calcdist:
     def calc_dist(self, amp, freq):
 
         if freq == self.freqA:
-            ret = self.funcA[0] * math.log(amp) + self.funcA[1]
+            ret = self.funcA[0] * np.log(amp) + self.funcA[1]
         elif freq == self.freqB:
-            ret = self.funcB[0] * math.log(amp) + self.funcB[1]
+            ret = self.funcB[0] * np.log(amp) + self.funcB[1]
         return ret
 
     #座標提供
