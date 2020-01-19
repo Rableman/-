@@ -1,7 +1,6 @@
 import commu
 
-dev = int(input("device num: "))
-for i in range(3):
+def sync_pos(dev, ip1 = "", ip2 = "", ip3 = ""):
     data = [{"ip":"","data":""},{"ip":"","data":""}]
     log = [[],[],[]]
     x = input("x = ")
@@ -16,19 +15,16 @@ for i in range(3):
     elif dev == 2:
         #デバイス２番(10号)は１回クライアント、１回サーバ
         while data[0]["data"] == "":
-            data[0] = commu.communication("tcp", "192.168.3.31", 50001).client(x + y)
+            data[0] = commu.communication("tcp", ip1, 50001).client(x + y)
         log[1] = list(data[0]["data"])
         data[1] = commu.communication("tcp", "0.0.0.0", 50003).server(x + y)
         log[2] = list(data[1]["data"])
-
     elif dev == 3:
         #デバイス３番(12号)は２回クライアント
         while data[0]["data"] == "":
-            data[0] = commu.communication("tcp", "192.168.3.31", 50002).client(x + y)
+            data[0] = commu.communication("tcp", ip1, 50002).client(x + y)
         log[1] = list(data[0]["data"])
         while data[1]["data"] == "":
-            data[1] = commu.communication("tcp", "192.168.3.3", 50003).client(x + y)
+            data[1] = commu.communication("tcp", ip2, 50003).client(x + y)
         log[2] = list(data[1]["data"])
-    print(log[0])
-    print(log[1])
-    print(log[2])
+    #for i in range(3): print(log[i])
