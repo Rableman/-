@@ -1,6 +1,6 @@
 import commu
 
-def sync_pos(dev, ip1 = "", ip2 = "", ip3 = ""):
+def sync_pos(dev, ip1, ip2):
     data = [{"ip":"","data":""},{"ip":"","data":""}]
     log = [[],[],[]]
     x = input("x = ")
