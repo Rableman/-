@@ -8,7 +8,7 @@ import csv
 
 #対数関数
 def log_func(x, a, b):
-    return a * (math.e**x) + b
+    return a * np.log(x) + b
 
 #リストの中身を定数で割る関数
 def div_list(lists, num):
@@ -64,7 +64,6 @@ class Record:
             freq1 = freq2
             freq2 = tmp
         self.data=np.zeros(self.CHUNK)
-
         #録音
         for i in range(0, int(self.RATE/self.CHUNK * record_seconds)): #秒数を指定して録音
             self.data=np.append(self.data,self.AudioInput(freq1, freq2))
@@ -79,11 +78,9 @@ class Record:
                 self.axis[i] = 0
         self.axis = self.axis[self.axis.nonzero()]
         self.fft_data = self.fft_data[self.fft_data.nonzero()]
-        plt.plot(self.axis, self.fft_data, label="test") 
-        plt.show()
 
         #ピーク検出
-        maxid1 = signal.argrelmax(self.fft_data, order=300)
+        maxid1 = signal.argrelmax(self.fft_data, order=100)
         maxamp = self.fft_data[maxid1]
 
         if debug == True:
@@ -91,12 +88,12 @@ class Record:
             plt.plot(self.axis, self.fft_data, label="test") 
             plt.plot(self.axis[maxid1], self.fft_data[maxid1], "ro")
             plt.show()
-        #print("amp1 = %2.2f[dB]" % self.get_db(maxamp1))
+            print("amp1 = %2.2f[dB]\namp2 = %2.2f[dB]" % (self.get_db(maxamp[0]),self.get_db(maxamp[1])))
         return list(maxamp)
 
     #デシベル計算
-    def get_db(self, amp, base = 1.0):
-        return math.log10((amp/base))
+    def get_db(self, amp, base = 2e-5):
+        return 20*math.log10(amp/base)
 
     #関数生成
     def get_func(self):
@@ -113,9 +110,10 @@ class Record:
         #10~50cm毎にnum回録音して振幅データ生成
         for i in range(len(x)):
             print("measuring %d cm" % ((i+1)*10))
-            for i in range(num):
-                ave.append(self.record(freq, rec_sec))
+            for j in range(num):
+                ave.append(self.record(freq, freq, rec_sec)[0])
             data.append(sum(ave)/len(ave))
+            print(data)
             input("Press enter to go next")
 
         #計測データをもとに関数生成
